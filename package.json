@@ -1,0 +1,31 @@
+{
+  "name": "jsutils",
+  "version": "1.0.0",
+  "description": "jsutils is a library to provide some frequent javascript methods.",
+  "main": "dist/jsutils.min.js",
+  "scripts": {
+    "lint": "jshint src/jsutils.js",
+    "test": "npm run lint && node tests/test.js",
+    "build": "gulp mini && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/csd758371536/jsutils.git"
+  },
+  "keywords": [
+    "jsutils"
+  ],
+  "author": "csdoker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/csd758371536/jsutils/issues"
+  },
+  "homepage": "https://github.com/csd758371536/jsutils#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^3.0.0",
+    "jshint": "^2.9.5",
+    "tape": "^4.9.0"
+  }
+}
