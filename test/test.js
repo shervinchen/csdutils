@@ -1,7 +1,7 @@
-'use strict';
-var test = require('tape');
-var jsutils = require('..');
+// 'use strict';
+// var test = require('tape');
+// var jsutils = require('..');
 
-test('jsutils.js show be tested', function (t) {
-
-});
+// test('jsutils.js show be tested', function (t) {
+//
+// });

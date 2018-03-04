@@ -1347,19 +1347,19 @@
     //var arr=[{a:1,b:2,c:9},{a:2,b:3,c:5},{a:5,b:9},{a:4,b:2,c:5},{a:4,b:5,c:7}]
     //ecDo.arraySort(arr,'a,b')a是第一排序条件，b是第二排序条件
     //result：[{"a":1,"b":2,"c":9},{"a":2,"b":3,"c":5},{"a":4,"b":2,"c":5},{"a":4,"b":5,"c":7},{"a":5,"b":9}]
-    arraySort: function(arr, sortText) {
-      if (!sortText) {
-        return arr;
-      }
-      var _sortText = sortText.split(',').reverse(),
-        _arr = arr.slice(0);
-      for (var i = 0, len = _sortText.length; i < len; i++) {
-        _arr.sort(function(n1, n2) {
-          return n1[_sortText[i]] - n2[_sortText[i]];
-        });
-      }
-      return _arr;
-    },
+    // arraySort: function(arr, sortText) {
+    //   if (!sortText) {
+    //     return arr;
+    //   }
+    //   var _sortText = sortText.split(',').reverse(),
+    //     _arr = arr.slice(0);
+    //   for (var i = 0, len = _sortText.length; i < len; i++) {
+    //     _arr.sort(function(n1, n2) {
+    //       return n1[_sortText[i]] - n2[_sortText[i]];
+    //     });
+    //   }
+    //   return _arr;
+    // },
     //数组扁平化
     steamroller: function(arr) {
       var newArr = [],
@@ -1524,14 +1524,14 @@
       }
       return pos;
     },
-    requestAnimFrame: function(callback) {
-      window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        function(callback) {
-          window.setTimeout(callback, 1000 / 60);
-        };
-    },
+    // requestAnimFrame: function(callback) {
+    //   window.requestAnimationFrame ||
+    //     window.webkitRequestAnimationFrame ||
+    //     window.mozRequestAnimationFrame ||
+    //     function(callback) {
+    //       window.setTimeout(callback, 1000 / 60);
+    //     };
+    // },
     /**
      *
      * @desc  在${duration}时间内，滚动条平滑滚动到${to}指定位置
@@ -2522,22 +2522,22 @@
       // return '#' + ('00000' + (Math.random() * 0x1000000 << 0).toString(16)).slice(-6);
     },
     /*图片加载*/
-    imgLoadAll: function(arr, callback) {
-      var arrImg = [];
-      for (var i = 0; i < arr.length; i++) {
-        var img = new Image();
-        img.src = arr[i];
-        img.onload = function() {
-          arrImg.push(this);
-          if (arrImg.length == arr.length) {
-            // callback && callback();
-            if (callback) {
-              callback();
-            }
-          }
-        };
-      }
-    },
+    // imgLoadAll: function(arr, callback) {
+    //   var arrImg = [];
+    //   for (var i = 0; i < arr.length; i++) {
+    //     var img = new Image();
+    //     img.src = arr[i];
+    //     img.onload = function() {
+    //       arrImg.push(this);
+    //       if (arrImg.length == arr.length) {
+    //         // callback && callback();
+    //         if (callback) {
+    //           callback();
+    //         }
+    //       }
+    //     };
+    //   }
+    // },
     /*音频加载*/
     loadAudio: function(src, callback) {
       var audio = new Audio(src);
