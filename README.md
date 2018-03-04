@@ -1,34 +1,34 @@
-# jsutils
+# csdutils
 
-> **jsutils** is a library to provide some frequent `javascript` methods.
+> **csdutils** is a library to provide some frequent `javascript` methods.
 
 <!-- [![Build Status](https://travis-ci.org/hustcc/filesize.js.svg?branch=master)](https://travis-ci.org/hustcc/filesize.js) [![npm](https://img.shields.io/npm/v/filesize.js.svg?style=flat-square)](https://www.npmjs.com/package/filesize.js) [![npm](https://img.shields.io/npm/dt/filesize.js.svg?style=flat-square)](https://www.npmjs.com/package/filesize.js) [![npm](https://img.shields.io/npm/l/filesize.js.svg?style=flat-square)](https://www.npmjs.com/package/filesize.js) -->
 
 
 # 1. Install
 
-> npm install jsutils
+> npm install csdutils
 
 Then import it.
 
 ```js
-var jsutils = require('jsutils');
+var csdutils = require('csdutils');
 
 //or
 
-import jsutils from 'jsutils';
+import csdutils from 'csdutils';
 ```
 
 Or import it with `<script>` tag.
 
 ```html
-<script type="text/javascript" src="jsutils.min.js"></script>
+<script type="text/javascript" src="csdutils.min.js"></script>
 ```
 
-Then use `jsutils` API.
+Then use `csdutils` API.
 
 ```js
-jsutils.isNumber(10); // true
+csdutils.isNumber(10); // true
 ```
 
 

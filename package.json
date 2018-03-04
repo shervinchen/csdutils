@@ -1,26 +1,26 @@
 {
-  "name": "jsutils",
+  "name": "csdutils",
   "version": "1.0.0",
-  "description": "jsutils is a library to provide some frequent javascript methods.",
-  "main": "dist/jsutils.min.js",
+  "description": "csdutils is a library to provide some frequent javascript methods.",
+  "main": "dist/csdutils.min.js",
   "scripts": {
-    "lint": "jshint src/jsutils.js",
+    "lint": "jshint src/csdutils.js",
     "test": "npm run lint && node test/test.js",
     "build": "gulp mini && npm run test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/csd758371536/jsutils.git"
+    "url": "git+https://github.com/csd758371536/csdutils.git"
   },
   "keywords": [
-    "jsutils"
+    "csdutils"
   ],
   "author": "csdoker",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/csd758371536/jsutils/issues"
+    "url": "https://github.com/csd758371536/csdutils/issues"
   },
-  "homepage": "https://github.com/csd758371536/jsutils#readme",
+  "homepage": "https://github.com/csd758371536/csdutils#readme",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",

@@ -1,9 +1,9 @@
 /*
- * jsutils v1.0.0
- * jsutils is a library to provide some frequent javascript methods
+ * csdutils v1.0.0
+ * csdutils is a library to provide some frequent javascript methods
  *
  * Copyright (c) 2018 csdoker <csd758371536@qq.com>
- * https://github.com/csd758371536/jsutils
+ * https://github.com/csd758371536/csdutils
  *
  * Licensed under the MIT license.
  */
@@ -13,15 +13,15 @@
   } else if (typeof exports === 'object' && module.exports) {
     module.exports = factory();
   } else {
-    root.jsutils = factory();
+    root.csdutils = factory();
   }
 }(typeof self !== 'undefined' ? self : this, function() {
   'use strict';
 
   // 声明全局命名空间
-  var jsutils = {};
+  var csdutils = {};
   // 校验工具
-  jsutils.checkUtils = {
+  csdutils.checkUtils = {
     // 校验数字类型
     isNumber: function(value) {
       return Object.prototype.toString.call(value).slice(8, -1) === 'Number';
@@ -391,8 +391,8 @@
      * 校验日期格式
      * @param {String} value 需要校验的日期字符串
      * @param {String} userFormat  需要验证的日期格式，如'yyyy-mm-dd'或'yyyy.mm.dd'等等
-     * jsutils.isValidDate('2016-07-12', 'yyyy-mm-dd'); // true
-     * jsutils.isValidDate('2016.07.32', 'yyyy.mm.dd'); // 根据yyyy.mm.dd格式来验证日期,因为没有32号而返回false
+     * csdutils.isValidDate('2016-07-12', 'yyyy-mm-dd'); // true
+     * csdutils.isValidDate('2016.07.32', 'yyyy.mm.dd'); // 根据yyyy.mm.dd格式来验证日期,因为没有32号而返回false
      */
     isValidDate: function(value, userFormat) {
       // 设置默认格式
@@ -421,7 +421,7 @@
     }
   };
   // 字符串工具
-  jsutils.stringUtils = {
+  csdutils.stringUtils = {
     // 字符串长度截取
     cutstr: function(str, len) {
       var temp;
@@ -660,7 +660,7 @@
      * 如果需要过滤多种字符，type参数使用,分割，如下栗子
      * 过滤字符串的html标签，大写字母，中文，特殊字符，全部替换成*,但是特殊字符'%'，'?'，除了这两个，其他特殊字符全部清除
      * var str="asd    654a大蠢sasdasdASDQWEXZC6d5#%^*^&*^%^&*$\\"\#@!()*{}?<div></div><img src=""/>啊实打实大蠢猪自行车这些课程"
-     * jsutils.filterStr(str,'html,WORD,chinese,special','*','%?')
+     * csdutils.filterStr(str,'html,WORD,chinese,special','*','%?')
      */
     filterStr: function(str, type, restr, spstr) {
       var typeArr = type.split(','),
@@ -715,11 +715,11 @@
     },
     /**
      * 格式化处理字符串
-     * jsutils.formatText('1234asda567asd890')
+     * csdutils.formatText('1234asda567asd890')
      * result："12,34a,sda,567,asd,890"
-     * jsutils.formatText('1234asda567asd890',4,' ')
+     * csdutils.formatText('1234asda567asd890',4,' ')
      * result："1 234a sda5 67as d890"
-     * jsutils.formatText('1234asda567asd890',4,'-')
+     * csdutils.formatText('1234asda567asd890',4,'-')
      * result："1-234a-sda5-67as-d890"
      */
     formatText: function(str, size, delimiter) {
@@ -731,9 +731,9 @@
     },
     /**
      * 找出最长单词 (Find the Longest word in a String)
-     * jsutils.longestWord('Find the Longest word in a String')
+     * csdutils.longestWord('Find the Longest word in a String')
      * result：7
-     * jsutils.longestWord('Find|the|Longest|word|in|a|String','|')
+     * csdutils.longestWord('Find|the|Longest|word|in|a|String','|')
      * result：7
      */
     longestWord: function(str, splitType) {
@@ -754,7 +754,7 @@
     },
     /**
      * 句中单词首字母大写 (Title Case a Sentence)
-     * jsutils.titleCaseUp('this is a title')
+     * csdutils.titleCaseUp('this is a title')
      * result："This Is A Title"
      */
     titleCaseUp: function(str, splitType) {
@@ -769,7 +769,7 @@
     }
   };
   // 数字工具
-  jsutils.numberUtils = {
+  csdutils.numberUtils = {
     //随机返回一个范围的数字
     randomNumber: function(n1, n2) {
       //randomNumber(5,10)
@@ -1017,7 +1017,7 @@
     }
   };
   // 数组工具
-  jsutils.arrayUtils = {
+  csdutils.arrayUtils = {
     /**
      *
      * @desc 判断两个数组是否相等
@@ -1490,7 +1490,7 @@
     }
   };
   // DOM工具
-  jsutils.domUtils = {
+  csdutils.domUtils = {
     /**
      *
      * @desc 获取滚动条距顶部的距离
@@ -1779,7 +1779,7 @@
     }
   };
   // 日期工具
-  jsutils.dateUtils = {
+  csdutils.dateUtils = {
     //是否闰年
     isLeapYear: function(year) {
       return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0);
@@ -2084,7 +2084,7 @@
     }
   };
   // HTTP工具
-  jsutils.httpUtils = {
+  csdutils.httpUtils = {
     /* 封装ajax函数
      * @param {string}obj.type http连接的方式，包括POST和GET两种方式
      * @param {string}obj.url 发送请求的url
@@ -2265,7 +2265,7 @@
     // }
   };
   // 存储工具
-  jsutils.storageUtils = {
+  csdutils.storageUtils = {
     ls: window.localStorage,
     ss: window.sessionStorage,
     //设置cookie
@@ -2352,7 +2352,7 @@
     }
   };
   // 普通工具
-  jsutils.commonUtils = {
+  csdutils.commonUtils = {
     keyCodeMap: {
       8: 'Backspace',
       9: 'Tab',
@@ -3149,7 +3149,7 @@
     }
   };
   // 事件工具
-  jsutils.eventUtils = {
+  csdutils.eventUtils = {
     /**
      * 把在页面加载完毕时执行的函数创建为一个队列(摘自 JavaScript DOM 编程艺术)
      * @param {*} func 需加进队列的函数
@@ -3215,5 +3215,5 @@
       }
     }
   };
-  return jsutils;
+  return csdutils;
 }));

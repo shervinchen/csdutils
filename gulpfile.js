@@ -5,16 +5,16 @@ const rename = require("gulp-rename");
 const babel = require("gulp-babel");
 
 // gulp.task('babel', function() {
-// 	gulp.src('src/jsutils.js')
+// 	gulp.src('src/csdutils.js')
 //   .pipe(babel({
 //     presets: ['es2015']
 //   }))
-// 	.pipe(gulp.dest('src/jsutils-es5'))
+// 	.pipe(gulp.dest('src/csdutils-es5'))
 // });
 
 gulp.task('mini', function() {
-  gulp.src('src/jsutils.js')
+  gulp.src('src/csdutils.js')
   .pipe(uglify())    //uglify
-  .pipe(rename("jsutils.min.js"))
+  .pipe(rename("csdutils.min.js"))
   .pipe(gulp.dest('dist/'))
 });
