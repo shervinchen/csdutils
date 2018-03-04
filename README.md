@@ -28,7 +28,7 @@ Or import it with `<script>` tag.
 Then use `csdutils` API.
 
 ```js
-csdutils.isNumber(10); // true
+csdutils.checkUtils.isNumber(10); // true
 ```
 
 
