@@ -8,10 +8,10 @@
  * Licensed under the MIT license.
  */
 (function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define([], factory);
-  } else if (typeof exports === 'object' && typeof module !== "undefined") {
+  if (typeof exports === 'object' && typeof module !== "undefined") {
     module.exports = factory();
+  } else if (typeof define === 'function' && define.amd) {
+    define([], factory);
   } else {
     if (typeof window !== "undefined") {
         window.csdutils = factory();
