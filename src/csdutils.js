@@ -13,9 +13,17 @@
   } else if (typeof exports === 'object' && module.exports) {
     module.exports = factory();
   } else {
-    root.csdutils = factory();
+    if (typeof window !== "undefined") {
+        window.csdutils = factory();
+    } else if (typeof global !== "undefined") {
+        global.csdutils = factory();
+    } else if (typeof self !== "undefined") {
+        self.csdutils = factory();
+    } else {
+        root.csdutils = factory();
+    }
   }
-}(typeof self !== 'undefined' ? self : this, function() {
+}(this, function() {
   'use strict';
 
   // 声明全局命名空间
