@@ -8,22 +8,14 @@
  * Licensed under the MIT license.
  */
 (function(root, factory) {
-  if (typeof exports === 'object' && typeof module !== "undefined") {
-    module.exports = factory();
-  } else if (typeof define === 'function' && define.amd) {
+  if (typeof define === 'function' && define.amd) {
     define([], factory);
+  } else if (typeof exports === 'object' && module.exports) {
+    module.exports = factory();
   } else {
-    if (typeof window !== "undefined") {
-        window.csdutils = factory();
-    } else if (typeof global !== "undefined") {
-        global.csdutils = factory();
-    } else if (typeof self !== "undefined") {
-        self.csdutils = factory();
-    } else {
-        root.csdutils = factory();
-    }
+    root.csdutils = factory();
   }
-}(this, function() {
+}(typeof self !== 'undefined' ? self : this, function() {
   'use strict';
 
   // 声明全局命名空间
@@ -2274,8 +2266,6 @@
   };
   // 存储工具
   csdutils.storageUtils = {
-    ls: window.localStorage,
-    ss: window.sessionStorage,
     //设置cookie
     setCookie: function(name, value, day) {
       var setting = arguments[0];
@@ -2315,48 +2305,48 @@
       var setting = arguments[0];
       if (Object.prototype.toString.call(setting).slice(8, -1) === 'Object') {
         for (var i in setting) {
-          this.ls.setItem(i, JSON.stringify(setting[i]));
+          window.localStorage.setItem(i, JSON.stringify(setting[i]));
         }
       } else {
-        this.ls.setItem(key, JSON.stringify(val));
+        window.localStorage.setItem(key, JSON.stringify(val));
       }
     },
     /*获取localStorage*/
     getLocal: function(key) {
-      if (key) return JSON.parse(this.ls.getItem(key));
+      if (key) return JSON.parse(window.localStorage.getItem(key));
       return null;
     },
     /*移除localStorage*/
     removeLocal: function(key) {
-      this.ls.removeItem(key);
+      window.localStorage.removeItem(key);
     },
     /*移除所有localStorage*/
     clearLocal: function() {
-      this.ls.clear();
+      window.localStorage.clear();
     },
     /*设置sessionStorage*/
     setSession: function(key, val) {
       var setting = arguments[0];
       if (Object.prototype.toString.call(setting).slice(8, -1) === 'Object') {
         for (var i in setting) {
-          this.ss.setItem(i, JSON.stringify(setting[i]));
+          window.sessionStorage.setItem(i, JSON.stringify(setting[i]));
         }
       } else {
-        this.ss.setItem(key, JSON.stringify(val));
+        window.sessionStorage.setItem(key, JSON.stringify(val));
       }
     },
     /*获取sessionStorage*/
     getSession: function(key) {
-      if (key) return JSON.parse(this.ss.getItem(key));
+      if (key) return JSON.parse(window.sessionStorage.getItem(key));
       return null;
     },
     /*移除sessionStorage*/
     removeSession: function(key) {
-      this.ss.removeItem(key);
+      window.sessionStorage.removeItem(key);
     },
     /*移除所有sessionStorage*/
     clearSession: function() {
-      this.ss.clear();
+      window.sessionStorage.clear();
     }
   };
   // 普通工具
