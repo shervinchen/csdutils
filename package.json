@@ -1,6 +1,6 @@
 {
   "name": "csdutils",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "csdutils is a library to provide some frequent javascript methods.",
   "main": "dist/csdutils.min.js",
   "scripts": {
