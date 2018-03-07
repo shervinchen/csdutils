@@ -7,7 +7,10 @@
 
 # 1. Install
 
-> npm install csdutils
+install with npm or bower.
+
+> npm install csdutils --save-dev
+> bower install csdutils --save
 
 Then import it.
 
@@ -19,7 +22,7 @@ var csdutils = require('csdutils');
 import csdutils from 'csdutils';
 ```
 
-Or import it with `<script>` tag.
+Or import it with <script> tag.
 
 ```html
 <script type="text/javascript" src="csdutils.min.js"></script>

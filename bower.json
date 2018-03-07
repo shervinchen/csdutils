@@ -1,0 +1,20 @@
+{
+  "name": "csdutils",
+  "description": "csdutils is a library to provide some frequent javascript methods.",
+  "main": "dist/csdutils.min.js",
+  "authors": [
+    "csdoker"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "csdutils"
+  ],
+  "homepage": "https://github.com/csd758371536/csdutils",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
