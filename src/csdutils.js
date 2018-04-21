@@ -171,6 +171,42 @@
     },
     /**
      *
+     * @desc   数据类型判断
+     * @param  {Object} o
+     * @param  {Object} obj
+     * @return {Boolean}
+     */
+    dataType: function (o, type) {
+        if (type) {
+            var _type = type.toLowerCase();
+        };
+        switch (_type) {
+            case 'string':
+                return Object.prototype.toString.call(o) === '[object String]';
+            case 'number':
+                return Object.prototype.toString.call(o) === '[object Number]';
+            case 'boolean':
+                return Object.prototype.toString.call(o) === '[object Boolean]';
+            case 'undefined':
+                return Object.prototype.toString.call(o) === '[object Undefined]';
+            case 'null':
+                return Object.prototype.toString.call(o) === '[object Null]';
+            case 'function':
+                return Object.prototype.toString.call(o) === '[object Function]';
+            case 'array':
+                return Object.prototype.toString.call(o) === '[object Array]';
+            case 'object':
+                return Object.prototype.toString.call(o) === '[object Object]';
+            case 'nan':
+                return isNaN(o);
+            case 'elements':
+                return Object.prototype.toString.call(o).indexOf('HTML') !== -1;
+            default:
+                return Object.prototype.toString.call(o);
+        };
+    },
+    /**
+     *
      * @desc 获取浏览器类型和版本
      * @return {String}
      */
@@ -443,6 +479,49 @@
       }
       return strre + "...";
     },
+    // /**
+    //  * subString 通用中英文截取
+    //  * @method Util.subString
+    //  * @param  {string}  str 原字符串
+    //  * @param  {int}  len 保留长度
+    //  * @param  {Boolean} hasDot 是否在结尾加上“...”
+    //  * @return {string} string
+    //  */
+    // subString: function (str, len, hasDot){
+    //     var newLength = 0;
+    //     var newStr = "";
+    //     var chineseRegex = /[^\x00-\xff]/g;
+    //     var singleChar = "";
+    //     var strLength = str.replace(chineseRegex,"**").length;
+    //     for(var i = 0;i < strLength;i++) {
+    //         singleChar = str.charAt(i).toString();
+    //         if(singleChar.match(chineseRegex) != null) {
+    //             newLength += 2;
+    //         }else{
+    //             newLength++;
+    //         }
+    //
+    //         if(newLength > len) {
+    //             break;
+    //         }
+    //         newStr += singleChar;
+    //     };
+    //
+    //     if(hasDot && strLength > len) {
+    //         newStr += "...";
+    //     };
+    //     return newStr;
+    // },
+    // /**
+    //  * 自定义截取字符串长度
+    //  * @method  Util.cutStr
+    //  * @param  {string} str 原字符串
+    //  * @param  {int} len 保留长度
+    //  * @return {string} string
+    //  */
+    // util.cutStr = function(str, len) {
+    //     return str.substring(0, len) + "...";
+    // };
     /**
      * 限制文本字数,超出的替换省略号
      * @param {String} str 要限制的文本
@@ -521,7 +600,13 @@
           return str;
       }
     },
-    // 字符串循环复制
+    /**
+     *
+     * @desc   字符串重复复制
+     * @param  {String} str
+     * @param  {Number} count:复制次数
+     * @return {String}
+     */
     repeatStr: function(str, count) {
       var text = '';
       for (var i = 0; i < count; i++) {
@@ -714,7 +799,12 @@
       return _str;
     },
     /**
-     * 格式化处理字符串
+     *
+     * @desc   格式化字符串
+     * @param  {String} str
+     * @param  {String} size:单个字符的长度
+     * @param  {Number} delimiter:用来连接的字符
+     * @return {String}
      * csdutils.formatText('1234asda567asd890')
      * result："12,34a,sda,567,asd,890"
      * csdutils.formatText('1234asda567asd890',4,' ')
@@ -753,6 +843,42 @@
       };
     },
     /**
+     *
+     * @desc   现金额转大写
+     * @param  {Number} n
+     * @return {String}
+     */
+    digitUppercase: function (n) {
+        var fraction = ['角', '分'];
+        var digit = [
+            '零', '壹', '贰', '叁', '肆',
+            '伍', '陆', '柒', '捌', '玖'
+        ];
+        var unit = [
+            ['元', '万', '亿'],
+            ['', '拾', '佰', '仟']
+        ];
+        var head = n < 0 ? '欠' : '';
+        n = Math.abs(n);
+        var s = '';
+        for (var i = 0; i < fraction.length; i++) {
+            s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');
+        };
+        s = s || '整';
+        n = Math.floor(n);
+        for (var i = 0; i < unit[0].length && n > 0; i++) {
+            var p = '';
+            for (var j = 0; j < unit[1].length && n > 0; j++) {
+                p = digit[n % 10] + unit[1][j] + p;
+                n = Math.floor(n / 10);
+            };
+            s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + unit[0][i] + s;
+        };
+        return head + s.replace(/(零.)*零元/, '元')
+            .replace(/(零.)+/g, '零')
+            .replace(/^整$/, '零元整');
+    },
+    /**
      * 句中单词首字母大写 (Title Case a Sentence)
      * csdutils.titleCaseUp('this is a title')
      * result："This Is A Title"
@@ -770,17 +896,23 @@
   };
   // 数字工具
   csdutils.numberUtils = {
-    //随机返回一个范围的数字
-    randomNumber: function(n1, n2) {
+    /**
+     *
+     * @desc 生成指定范围随机数
+     * @param  {Number} min
+     * @param  {Number} max
+     * @return {Number}
+     */
+    randomNumber: function(min, max) {
       //randomNumber(5,10)
       //返回5-10的随机整数，包括5，10
       if (arguments.length === 2) {
-        return Math.round(n1 + Math.random() * (n2 - n1));
+        return Math.round(min + Math.random() * (max - min));
       }
       //randomNumber(10)
       //返回0-10的随机整数，包括0，10
       else if (arguments.length === 1) {
-        return Math.round(Math.random() * n1);
+        return Math.round(Math.random() * min);
       }
       //randomNumber()
       //返回0-255的随机整数，包括0，255
@@ -1184,6 +1316,55 @@
       //es6
       //return Array.from(new Set(arr))
     },
+    // /**
+    //  *
+    //  * @desc 数组去重
+    //  * @param {Array} arr
+    //  * @return {Array}
+    //  */
+    // // 第一种方法：
+    // function arrayRemoveRepeat(arr) {
+    //     return arr.filter(function (item, index, self) {
+    //         return self.indexOf(item) === index;
+    //     });
+    // };
+    // 第二种方法：
+    // function arrayRemoveRepeat(arr) {
+    //     let newarr = [];
+    //     arr.forEach((item, index) => {
+    //         newarr.indexOf(item) === -1 ? newarr.push(item) : '';
+    //     });
+    //     return newarr;
+    // };
+    // 第三种方法：
+    // function arrayRemoveRepeat(arr) {
+    //     let newarr = [];
+    //     for (let i = 0; i < arr.length; i++) {
+    //         for (let j = i + 1; j < arr.length; j++) {
+    //             if (arr[i] === arr[j]) {
+    //                 j = ++i;
+    //             };
+    //         };
+    //         newarr.push(arr[i]);
+    //     };
+    //     return newarr;
+    // };
+    // 第四种方法：
+    // function arrayRemoveRepeat(arr) {
+    //     let newarr = [];
+    //     Array.prototype.forEach.call(arguments[0], (item, index) => {
+    //         newarr.indexOf(item) === -1 ? newarr.push(item) : '';
+    //     });
+    //     return newarr;
+    // };
+    // 第五种方法：
+    // function arrayRemoveRepeat(arr) {
+    //     return Array.from(new Set(arr));
+    // };
+    // 第六种方法：
+    // function arrayRemoveRepeat(arr) {
+    //     return [...new Set(arr)];
+    // };
     //数组顺序打乱
     upsetArr: function(arr) {
       return arr.sort(function() {
@@ -1195,10 +1376,33 @@
     maxArr: function(arr) {
       return Math.max.apply(null, arr);
     },
+    // 第二种方法：
+    // function maxArr(arr) {
+    //     return Math.max(...arr);
+    // };
+
+    // 第三种方法：
+    // function maxArr(arr) {
+    //     return arr.reduce(function (prev, next) {
+    //         return Math.max(prev, next);
+    //     });
+    // };
     //数组最小值
     minArr: function(arr) {
       return Math.min.apply(null, arr);
     },
+    // 第二种方法：
+    // function minArr(arr) {
+    //     return Math.min(...arr);
+    // };
+
+    // 第三种方法：
+    // function minArr(arr) {
+    //     return arr.reduce(function (prev, next) {
+    //         return Math.min(prev, next);
+    //     });
+    // };
+
     //这一块的封装，主要是针对数字类型的数组
     //数组求和
     sumArr: function(arr) {
@@ -1291,6 +1495,22 @@
       return arr.filter(function(item) {
         return type ? item.indexOf(val) === -1 : item !== val;
       });
+    },
+    /**
+     *
+     * @desc 返回数组或字符串中一个元素出现的次数
+     * @param {Array|String} arr
+     * @param {Number|String} ele
+     * @return {Number}
+     */
+    getEleCount: function (obj, ele) {
+        var num = 0;
+        for (var i = 0, len = obj.length; i < len; i++) {
+            if (ele === obj[i]) {
+                num++;
+            };
+        };
+        return num;
     },
     //获取对象数组某些项
     //var arr=[{a:1,b:2,c:9},{a:2,b:3,c:5},{a:5,b:9},{a:4,b:2,c:5},{a:4,b:5,c:7}]
@@ -1405,6 +1625,13 @@
     //      }
     //      return newArr;
     //  },
+    // 第三种方法：
+    // arrayFlattening: function (arr) {
+    //     while (arr.some((item) => Array.isArray(item))) {
+    //         arr = [].concat(...arr);
+    //     };
+    //     return arr;
+    // };
     // 深拷贝
     deepCopy: function(obj) {
       if (typeof obj !== 'object') return;
@@ -1606,6 +1833,16 @@
         return false;
       }
     },
+    // /**
+    //  *
+    //  * @desc 判断元素是否有某个class
+    //  * @param {HTMLElement} ele
+    //  * @param {String} cls
+    //  * @return {Boolean}
+    //  */
+    // function hasClass(ele, cls) {
+    //     return (new RegExp('(\\s|^)' + cls + '(\\s|$)')).test(ele.className);
+    // };
     /*添加类名*/
     addClass1: function(ele, name) {
       if (!this.hasClass(ele, name)) ele.className += " " + name;
@@ -1624,7 +1861,12 @@
         }
       }
     },
-    /*删除类名*/
+    /**
+     *
+     * @desc 为元素移除class
+     * @param {HTMLElement} ele
+     * @param {String} cls
+     */
     removeClass1: function(ele, name) {
       if (this.hasClass(ele, name)) {
         var reg = new RegExp('(\\s|^)' + name + '(\\s|$)');
@@ -1778,6 +2020,131 @@
       obj.style.display = "none";
     }
   };
+  // BOM工具
+  csdutils.bomUtils = {
+    /**
+     *
+     * @desc 全屏显示与取消全屏
+     * @html <a id="toggleFullScreen" href="javascript:;" onclick="toggleFullScreen()">全屏显示</a>
+     */
+    toggleFullScreen: function () {
+        if (!document.fullscreenElement &&
+            !document.mozFullScreenElement && !document.webkitFullscreenElement) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+                document.getElementById("toggleFullScreen").innerText = "退出全屏";
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+                document.getElementById("toggleFullScreen").innerText = "退出全屏";
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                document.getElementById("toggleFullScreen").innerText = "退出全屏";
+            }
+        } else {
+            if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+                document.getElementById("toggleFullScreen").innerText = "全屏显示";
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+                document.getElementById("toggleFullScreen").innerText = "全屏显示";
+            } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+                document.getElementById("toggleFullScreen").innerText = "全屏显示";
+            }
+        }
+    },
+    // 监听Esc按键退出全屏事件
+    // window.onresize = function () {
+    //     var isFull = document.fullscreenEnabled || window.fullScreen || document.webkitIsFullScreen || document.msFullscreenEnabled;
+    //     if (isFull === undefined) {
+    //         isFull = false;
+    //     }
+    //     if (!isFull) {
+    //         if (document.cancelFullScreen || document.mozCancelFullScreen || document.webkitCancelFullScreen) {
+    //             document.getElementById("toggleFullScreen").innerText = "全屏显示";
+    //         }
+    //     }
+    // },
+
+    // var getScrollTop = require('./getScrollTop');
+    // var setScrollTop = require('./setScrollTop');
+    // var requestAnimFrame = (function () {
+    //     return window.requestAnimationFrame ||
+    //         window.webkitRequestAnimationFrame ||
+    //         window.mozRequestAnimationFrame ||
+    //         function (callback) {
+    //             window.setTimeout(callback, 1000 / 60);
+    //         };
+    // })();
+    // /**
+    //  *
+    //  * @desc  在${duration}时间内，滚动条平滑滚动到${to}指定位置
+    //  * @param {Number} to
+    //  * @param {Number} duration
+    //  */
+    // function scrollTo(to, duration) {
+    //     if (duration < 0) {
+    //         setScrollTop(to);
+    //         return;
+    //     };
+    //     var diff = to - getScrollTop();
+    //     if (diff === 0) return;
+    //     var step = diff / duration * 10;
+    //     requestAnimationFrame(
+    //         function () {
+    //             if (Math.abs(step) > Math.abs(diff)) {
+    //                 setScrollTop(getScrollTop() + diff);
+    //                 return;
+    //             };
+    //             setScrollTop(getScrollTop() + step);
+    //             if (diff > 0 && getScrollTop() >= to || diff < 0 && getScrollTop() <= to) {
+    //                 return;
+    //             };
+    //             scrollTo(to, duration - 16);
+    //         });
+    // };
+    /**
+     *
+     * @desc 获取滚动条距顶部的距离
+     */
+    getScrollTop: function () {
+        return (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+    },
+    /**
+     *
+     * @desc 设置滚动条距顶部的距离
+     */
+    setScrollTop: function (value) {
+        window.scrollTo(0, value);
+        return value;
+    },
+    /**
+     *
+     * @desc 判断浏览器是否支持webP格式图片
+     * @return {Boolean}
+     */
+    isSupportWebP: function () {
+        return !![].map && document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') == 0;
+    },
+    /**
+     *
+     * @desc  获取一个元素的距离文档(document)的位置，类似jQ中的offset()
+     * @param {HTMLElement} ele
+     * @returns { {left: number, top: number} }
+     */
+    offset: function (ele) {
+        var pos = {
+            left: 0,
+            top: 0
+        };
+        while (ele) {
+            pos.left += ele.offsetLeft;
+            pos.top += ele.offsetTop;
+            ele = ele.offsetParent;
+        };
+        return pos;
+    }
+  };
   // 日期工具
   csdutils.dateUtils = {
     //是否闰年
@@ -1884,6 +2251,69 @@
       });
       return time_str;
     },
+    // /**
+    //  * 时间格式化 返回格式化的时间
+    //  * 格式：
+    //  *    YYYY：4位年,如1993
+    //  *　　YY：2位年,如93
+    //  *　　MM：月份
+    //  *　　DD：日期
+    //  *　　hh：小时
+    //  *　　mm：分钟
+    //  *　　ss：秒钟
+    //  *　　星期：星期，返回如 星期二
+    //  *　　周：返回如 周二
+    //  *　　week：英文星期全称，返回如 Saturday
+    //  *　　www：三位英文星期，返回如 Sat
+    //  * @method Util.formatDate
+    //  * @param {object} date   可选参数，要格式化的data对象，没有则为当前时间
+    //  * @param {string} fomat  格式化字符串，例如：'YYYY年MM月DD日 hh时mm分ss秒 星期' 'YYYY/MM/DD week' (中文为星期，英文为week)
+    //  * @return {string} 返回格式化的字符串
+    //  *
+    //  * 例子:
+    //  * @example
+    //  *   formatDate(new Date("january 01,2012"));
+    //  * @example
+    //  *   formatDate(new Date());
+    //  * @example
+    //  *   formatDate('YYYY年MM月DD日 hh时mm分ss秒 星期 YYYY-MM-DD week');
+    //  * @example
+    //  *   formatDate(new Date("january 01,2012"),'YYYY年MM月DD日 hh时mm分ss秒 星期 YYYY/MM/DD week');
+    //  */
+    // formatDate: function (date, format) {
+    //     if (arguments.length < 2 && !date.getTime) {
+    //         format = date;
+    //         date = new Date();
+    //     }
+    //     typeof format != 'string' && (format = seewoLang.time_formate1);
+    //     var week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', seewoLang.Day, seewoLang.One, seewoLang.Two, seewoLang.Three, seewoLang.Four, seewoLang.Five, seewoLang.Six];
+    //     return format.replace(/YYYY|YY|MM|DD|hh|mm|ss|www|week/g, function(a) {
+    //         switch (a) {
+    //             case "YYYY":
+    //                 return date.getFullYear();
+    //             case "YY":
+    //                 return (date.getFullYear() + "").slice(2);
+    //             case "MM":
+    //                 return (date.getMonth() + 1 +"").length < 2 ? "0"+( date.getMonth() + 1) : date.getMonth() + 1;
+    //             case "DD":
+    //                 return (date.getDate()+"").length < 2 ? "0"+date.getDate() : date.getDate();
+    //             case "hh":
+    //                 return (date.getHours()+"").length < 2 ? "0"+date.getHours() : date.getHours();
+    //             case "mm":
+    //                 return (date.getMinutes()+"").length < 2 ? "0"+ date.getMinutes() : date.getMinutes();
+    //             case "ss":
+    //                 return (date.getSeconds()+"").length < 2 ? "0"+ date.getSeconds() : date.getSeconds();
+    //             case "星期":
+    //                 return "星期" + week[date.getDay() + 7];
+    //             case seewoLang.Week:
+    //                 return seewoLang.Week + week[date.getDay() + 7];
+    //             case "week":
+    //                 return week[date.getDay()];
+    //             case "www":
+    //                 return week[date.getDay()].slice(0, 3);
+    //         }
+    //     });
+    // },
     /**
      * 返回指定长度的月份集合
      *
@@ -2266,7 +2696,13 @@
   };
   // 存储工具
   csdutils.storageUtils = {
-    //设置cookie
+    /**
+     *
+     * @desc  设置Cookie
+     * @param {String} name
+     * @param {String} value
+     * @param {Number} days:过期时间
+     */
     setCookie: function(name, value, day) {
       var setting = arguments[0];
       if (Object.prototype.toString.call(setting).slice(8, -1) === 'Object') {
@@ -2281,7 +2717,30 @@
         document.cookie = name + '=' + value + ';expires=' + oDate2;
       }
     },
-    //获取cookie
+    // /**
+    //  * 写入cookie
+    //  * @param {[type]} name
+    //  * @param {[type]} value
+    //  * @param Number expires 过期时间，单位是天
+    //  * @param {[type]} path
+    //  * @param {[type]} domain
+    //  * @param {[type]} secure
+    //  */
+    // setCookie: function (name, value, expires, path, domain, secure) {
+    //     var exp = new Date(),
+    //         expires = arguments[2] || null,
+    //         path = arguments[3] || "/",
+    //         domain = arguments[4] || null,
+    //         secure = arguments[5] || false;
+    //     expires ? exp.setTime(exp.getTime() + expires * 24 * 3600 * 1000) : "";
+    //     document.cookie = name + '=' + encodeURIComponent(value) + ( expires ? ';expires=' + exp.toGMTString() : '') + ( path ? ';path=' + path : '') + ( domain ? ';domain=' + domain : '') + ( secure ? ';secure' : '');
+    // },
+    /**
+     *
+     * @desc 根据name读取cookie
+     * @param  {String} name
+     * @return {String}
+     */
     getCookie: function(name) {
       var arr = document.cookie.replace(/\s/g, "").split('; ');
       for (var i = 0; i < arr.length; i++) {
@@ -2292,9 +2751,36 @@
       }
       return '';
     },
-    //删除cookie
+    // /**
+    //  * 获取cookie信息
+    //  * @method $.getCookie
+    //  * @param {String} name 获取的cookie的键值
+    //  * @return {String} 获取的cookie值
+    // */
+    // getCookie: function(name){
+    //     var reg = new RegExp('(?:^|;\\s*)' + name + '=([^;]*)'),
+    //         result = document.cookie.match(reg);
+    //     return (result ? decodeURIComponent(result[1]) : "");
+    // },
+    /**
+     *
+     * @desc 根据name删除cookie
+     * @param  {String} name
+     */
     removeCookie: function(name) {
       this.setCookie(name, 1, -1);
+    },
+    /**
+     * 删除指定cookie
+     * @param  {[type]} name
+     * @param  {[type]} path
+     * @param  {[type]} domain
+     */
+    delCookie: function (name, path, domain) {
+        var value = this.getCookie(name);
+        if (value != null) {
+            document.cookie = name + '=; expires=Mon, 2 Mar 2010 19:00:00 UTC; path=' + (path || '/') + '; domain=' + (domain || '') + ';';
+        }
     },
     // 检查是否含有某cookie
     hasCookie: function(name) {
@@ -2500,7 +2986,11 @@
         return new Array(7 - h.length).join("0") + h;
       })((Math.random() * 0x1000000 << 0).toString(16));
     },
-    //随进产生颜色
+    /**
+     *
+     * @desc 随机生成颜色
+     * @return {String}
+     */
     randomColor: function() {
       //randomNumber是下面定义的函数
       //写法1
@@ -2639,6 +3129,18 @@
       if (r != null) return r[2];
       return null;
     },
+    /**
+     * 获取URL中的参数值
+     * @param 变量名，必须
+     * @param URL为空则取当前页面
+     * @returns {*}
+     */
+    getParam: function (name, url) {
+        var u = arguments[1] || window.location.search.replace("&amp;", "&"),
+            reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"),
+            result = u.substr(u.indexOf("\?") + 1).match(reg);
+        return result != null ? result[2] : "";
+    },
     /*
      * 获取URL地址里的指定参数
      * @param name 需要获取到的参数
@@ -2672,6 +3174,26 @@
       }
       return _rs;
     },
+    // /**
+    //  * 获取URL中的参数的值
+    //  * @method  Util.getUrlParam
+    //  * @param {string} paras 参数key
+    //  * @returns {string} 返回参数的value
+    //  */
+    // util.getUrlParam = function(paras){
+    //     var url = location.href;
+    //     var paraString = url.substring(url.indexOf("?")+1,url.length).split("&");
+    //     var paraObj = {}
+    //     for (i=0; j=paraString[i]; i++){
+    //         paraObj[j.substring(0,j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=")+1,j.length);
+    //     }
+    //     var returnValue = paraObj[paras.toLowerCase()];
+    //     if(typeof(returnValue)=="undefined"){
+    //         return "";
+    //     }else{
+    //         return returnValue;
+    //     }
+    // };
     /**
      *
      * @desc   url参数转对象
@@ -2690,6 +3212,38 @@
       }
       return query;
     },
+    /**
+     * 获取网站的baseUrl
+     * @method  Util.getRootPath
+     * @return {string}
+     */
+    getRootPath: function() {
+        // 获取当前网址，如： http://localhost:8080/iclass/edu/teacher/task.jsp
+        var curWwwPath = window.document.location.href;
+        // 获取主机地址之后的目录，如： iclass/edu/teacher/task.jsp
+        var pathName = window.document.location.pathname;
+        var pos = curWwwPath.indexOf(pathName);
+        // 获取主机地址，如： http://localhost:8080
+        var localhostPaht = curWwwPath.substring(0, pos);
+        // 获取带"/"的项目名，如：/iclass
+        var projectName = pathName.substring(0,
+            pathName.substr(1).indexOf('/') + 1);
+        return (localhostPaht + projectName);
+    },
+    // /**
+    //  *
+    //  * @desc   url参数转对象
+    //  * @param  {String} url  default: window.location.href
+    //  * @return {Object}
+    //  */
+    // function parseQueryString(url) {
+    //     url = url == null ? window.location.href : url;
+    //     var search = url.substring(url.lastIndexOf('?') + 1);
+    //     if (!search) {
+    //         return {}
+    //     }
+    //     return JSON.parse('{"' + decodeURIComponent(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
+    // };
     /**
      *
      * @desc   对象序列化
@@ -3053,6 +3607,28 @@
     debounce1: function(delay, atBegin, callback) {
       return callback === undefined ? this.throttle(delay, atBegin, false) : this.throttle(delay, callback, atBegin !== false);
     },
+    // /**
+    //  * 高频执行方法的防抖
+    //  * @method Util.debounce
+    //  * @param  {function} func      需要高频执行的函数
+    //  * @param  {string} wait      执行间隔时间
+    //  * @param  {boolean} immediate 是否立刻执行
+    //  */
+    // debounce = function(func, wait, immediate) {
+    //     var timeout;
+    //     return function() {
+    //         var context = this,
+    //             args = arguments;
+    //         var later = function() {
+    //             timeout = null;
+    //             if (!immediate) func.apply(context, args);
+    //         };
+    //         var callNow = immediate && !timeout;
+    //         clearTimeout(timeout);
+    //         timeout = setTimeout(later, wait);
+    //         if (callNow) func.apply(context, args);
+    //     };
+    // };
     //函数节流
     // var count=0;
     // function fn1(){
@@ -3134,6 +3710,147 @@
       style.appendChild(document.createTextNode(''));
       document.head.appendChild(style);
       style.sheet.insertRule(rule, style.sheet.cssRules.length);
+    },
+    /**
+     * 下载附件
+     * @method Util.downloadAttachFile
+     * @param  {string} [url] 附件的下载URL，不传时使用默认值
+     */
+    downLoadAttachFileByUrl: function(url){
+        var url = url ? url : '/download';
+        var elemIF = document.createElement("iframe");
+        elemIF.src = url;
+        elemIF.style.display = "none";
+        document.body.appendChild(elemIF);
+    },
+    /**
+    * 比较两个浮点数（支持字符串数字），如果前者大于后者，则返回true，否则false
+    * @method Util.biggerThan
+    * @param {float} doubleNum1
+    * @param {float} doubleNum2
+    * @param {string} opt_precision 精确度，默认2
+    * @returns {boolean} true or false
+    */
+    biggerThan: function(doubleNum1, doubleNum2, opt_precision) {
+       opt_precision = opt_precision || 2;
+       if(opt_precision == doubleNum1.toString().split(".")[1].length){
+           return parseInt(parseFloat(doubleNum1) * Math.pow(10, opt_precision)) > parseInt(parseFloat(doubleNum2) * Math.pow(10, opt_precision));
+       }else{
+           return Math.round(parseFloat(doubleNum1) * Math.pow(10, opt_precision)) > parseInt(parseFloat(doubleNum2) * Math.pow(10, opt_precision));
+       }
+    },
+    /**
+     * 格式化文件大小
+     * @param  {[type]} size [description]
+     * @return {[type]}      [description]
+     */
+    formatFileSize: function(size) {
+        var string;
+        if (size >= 1024 * 1024 * 1024 * 1024 / 10) {
+            size = size / (1024 * 1024 * 1024 * 1024 / 10);
+            string = "TB";
+        } else if (size >= 1024 * 1024 * 1024 / 10) {
+            size = size / (1024 * 1024 * 1024 / 10);
+            string = "GB";
+        } else if (size >= 1024 * 1024 / 10) {
+            size = size / (1024 * 1024 / 10);
+            string = "MB";
+        } else if (size >= 1024 / 10) {
+            size = size / (1024 / 10);
+            string = "KB";
+        } else {
+            size = size * 10;
+            string = "b";
+        }
+        return (Math.round(size) / 10) + string;
+    },
+    /**
+     * 获取微信版本
+     */
+    getWxVersion: function () {
+        var ua = navigator.userAgent;
+        if (/MicroMessenger/.test(ua)) {
+            return parseInt(ua.match(/MicroMessenger\/(.*)/i)[1], 10);
+        } else {
+            return 5;
+        }
+    },
+    /**
+     * 浮点数相加
+     * @param arg1
+     * @param arg2
+     * @returns {number}
+     */
+    accAdd: function(arg1,arg2){
+        var r1,r2,m;
+        try{
+            r1 = arg1.toString().split(".")[1].length
+        }catch(e){r1=0}
+        try{
+            r2 = arg2.toString().split(".")[1].length
+        }catch(e){r2=0}
+        m = Math.pow(10,Math.max(r1,r2));
+        return (arg1 * m + arg2 * m) / m;
+    },
+    /**
+     * 浮点数减法
+     * @param arg1
+     * @param arg2
+     * @returns {string}
+     */
+    accSub: function(arg1,arg2){
+        var r1,r2,m,n;
+        try{
+            r1=arg1.toString().split(".")[1].length
+        }catch(e){
+            r1=0
+        }
+        try{
+            r2=arg2.toString().split(".")[1].length
+        }catch(e){
+            r2=0
+        }
+        m = Math.pow(10,Math.max(r1,r2));
+        n=(r1>=r2)?r1:r2;
+        return ((arg2*m-arg1*m)/m).toFixed(n);
+    },
+    /**
+     * 浮点数乘法
+     * @param arg1, Number or String
+     * @param arg2, Number or String
+     * @returns {number}
+     */
+    accMul: function(arg1,arg2){
+        var m=0,
+            s1=arg1.toString(),
+            s2=arg2.toString();
+            try{
+                m+=s1.split(".")[1].length
+            }catch(e){}
+            try{
+                m+=s2.split(".")[1].length
+            }catch(e){}
+        return Number(s1.replace(".","")) * Number(s2.replace(".","")) / Math.pow(10,m);
+    },
+    /**
+     * 浮点数除法
+     * @param arg1
+     * @param arg2
+     * @returns {number}
+     */
+    accDiv: function(arg1,arg2){
+        var t1=0,t2=0,r1,r2;
+        try{
+            t1=arg1.toString().split(".")[1].length
+        }catch(e){}
+        try{
+            t2=arg2.toString().split(".")[1].length
+        }catch(e){}
+        with(Math){
+            r1=Number(arg1.toString().replace(".",""));
+            r2=Number(arg2.toString().replace(".",""));
+            return (r1/r2)*pow(10,t2-t1);
+        }
     },
     // 判断网页元素是否具有某种属性和样式 matchesSelector
     // Usage
