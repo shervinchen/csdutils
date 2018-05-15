@@ -176,34 +176,34 @@
      * @param  {Object} obj
      * @return {Boolean}
      */
-    dataType: function (o, type) {
-        if (type) {
-            var _type = type.toLowerCase();
-        };
-        switch (_type) {
-            case 'string':
-                return Object.prototype.toString.call(o) === '[object String]';
-            case 'number':
-                return Object.prototype.toString.call(o) === '[object Number]';
-            case 'boolean':
-                return Object.prototype.toString.call(o) === '[object Boolean]';
-            case 'undefined':
-                return Object.prototype.toString.call(o) === '[object Undefined]';
-            case 'null':
-                return Object.prototype.toString.call(o) === '[object Null]';
-            case 'function':
-                return Object.prototype.toString.call(o) === '[object Function]';
-            case 'array':
-                return Object.prototype.toString.call(o) === '[object Array]';
-            case 'object':
-                return Object.prototype.toString.call(o) === '[object Object]';
-            case 'nan':
-                return isNaN(o);
-            case 'elements':
-                return Object.prototype.toString.call(o).indexOf('HTML') !== -1;
-            default:
-                return Object.prototype.toString.call(o);
-        };
+    dataType: function(o, type) {
+      if (type) {
+        var _type = type.toLowerCase();
+      };
+      switch (_type) {
+        case 'string':
+          return Object.prototype.toString.call(o) === '[object String]';
+        case 'number':
+          return Object.prototype.toString.call(o) === '[object Number]';
+        case 'boolean':
+          return Object.prototype.toString.call(o) === '[object Boolean]';
+        case 'undefined':
+          return Object.prototype.toString.call(o) === '[object Undefined]';
+        case 'null':
+          return Object.prototype.toString.call(o) === '[object Null]';
+        case 'function':
+          return Object.prototype.toString.call(o) === '[object Function]';
+        case 'array':
+          return Object.prototype.toString.call(o) === '[object Array]';
+        case 'object':
+          return Object.prototype.toString.call(o) === '[object Object]';
+        case 'nan':
+          return isNaN(o);
+        case 'elements':
+          return Object.prototype.toString.call(o).indexOf('HTML') !== -1;
+        default:
+          return Object.prototype.toString.call(o);
+      };
     },
     /**
      *
@@ -848,35 +848,35 @@
      * @param  {Number} n
      * @return {String}
      */
-    digitUppercase: function (n) {
-        var fraction = ['角', '分'];
-        var digit = [
-            '零', '壹', '贰', '叁', '肆',
-            '伍', '陆', '柒', '捌', '玖'
-        ];
-        var unit = [
-            ['元', '万', '亿'],
-            ['', '拾', '佰', '仟']
-        ];
-        var head = n < 0 ? '欠' : '';
-        n = Math.abs(n);
-        var s = '';
-        for (var i = 0; i < fraction.length; i++) {
-            s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');
+    digitUppercase: function(n) {
+      var fraction = ['角', '分'];
+      var digit = [
+        '零', '壹', '贰', '叁', '肆',
+        '伍', '陆', '柒', '捌', '玖'
+      ];
+      var unit = [
+        ['元', '万', '亿'],
+        ['', '拾', '佰', '仟']
+      ];
+      var head = n < 0 ? '欠' : '';
+      n = Math.abs(n);
+      var s = '';
+      for (var i = 0; i < fraction.length; i++) {
+        s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');
+      };
+      s = s || '整';
+      n = Math.floor(n);
+      for (var i = 0; i < unit[0].length && n > 0; i++) {
+        var p = '';
+        for (var j = 0; j < unit[1].length && n > 0; j++) {
+          p = digit[n % 10] + unit[1][j] + p;
+          n = Math.floor(n / 10);
         };
-        s = s || '整';
-        n = Math.floor(n);
-        for (var i = 0; i < unit[0].length && n > 0; i++) {
-            var p = '';
-            for (var j = 0; j < unit[1].length && n > 0; j++) {
-                p = digit[n % 10] + unit[1][j] + p;
-                n = Math.floor(n / 10);
-            };
-            s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + unit[0][i] + s;
-        };
-        return head + s.replace(/(零.)*零元/, '元')
-            .replace(/(零.)+/g, '零')
-            .replace(/^整$/, '零元整');
+        s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + unit[0][i] + s;
+      };
+      return head + s.replace(/(零.)*零元/, '元')
+        .replace(/(零.)+/g, '零')
+        .replace(/^整$/, '零元整');
     },
     /**
      * 句中单词首字母大写 (Title Case a Sentence)
@@ -1150,6 +1150,12 @@
   };
   // 数组工具
   csdutils.arrayUtils = {
+    // 检测是否是数组
+    judgeArr: function(arr) {
+      if (Array.isArray(arr)) {
+        return true;
+      }
+    },
     /**
      *
      * @desc 判断两个数组是否相等
@@ -1432,6 +1438,21 @@
       }
       return num;
     },
+    // 纯数组排序
+    orderArr: function(arr) {
+      arr.sort((a, b) => {
+        return a - b //将arr升序排列,如果是倒序return -(a-b)
+      })
+    },
+    // 数组对象排序
+    orderArr2: function(arr) {
+        arr.sort((a,b)=>{
+            let value1 = a[property];
+            let value2 = b[property];
+            return value1 - value2;//sort方法接收一个函数作为参数，这里嵌套一层函数用
+            //来接收对象属性名，其他部分代码与正常使用sort方法相同
+        })
+    },
     //返回数组（字符串）出现最多的几次元素和出现次数
     //arr, rank->长度，默认为数组长度，ranktype，排序方式，默认降序
     //返回值：el->元素，count->次数
@@ -1503,14 +1524,14 @@
      * @param {Number|String} ele
      * @return {Number}
      */
-    getEleCount: function (obj, ele) {
-        var num = 0;
-        for (var i = 0, len = obj.length; i < len; i++) {
-            if (ele === obj[i]) {
-                num++;
-            };
+    getEleCount2: function(obj, ele) {
+      var num = 0;
+      for (var i = 0, len = obj.length; i < len; i++) {
+        if (ele === obj[i]) {
+          num++;
         };
-        return num;
+      };
+      return num;
     },
     //获取对象数组某些项
     //var arr=[{a:1,b:2,c:9},{a:2,b:3,c:5},{a:5,b:9},{a:4,b:2,c:5},{a:4,b:5,c:7}]
@@ -2027,31 +2048,31 @@
      * @desc 全屏显示与取消全屏
      * @html <a id="toggleFullScreen" href="javascript:;" onclick="toggleFullScreen()">全屏显示</a>
      */
-    toggleFullScreen: function () {
-        if (!document.fullscreenElement &&
-            !document.mozFullScreenElement && !document.webkitFullscreenElement) {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-                document.getElementById("toggleFullScreen").innerText = "退出全屏";
-            } else if (document.documentElement.mozRequestFullScreen) {
-                document.documentElement.mozRequestFullScreen();
-                document.getElementById("toggleFullScreen").innerText = "退出全屏";
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-                document.getElementById("toggleFullScreen").innerText = "退出全屏";
-            }
-        } else {
-            if (document.cancelFullScreen) {
-                document.cancelFullScreen();
-                document.getElementById("toggleFullScreen").innerText = "全屏显示";
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-                document.getElementById("toggleFullScreen").innerText = "全屏显示";
-            } else if (document.webkitCancelFullScreen) {
-                document.webkitCancelFullScreen();
-                document.getElementById("toggleFullScreen").innerText = "全屏显示";
-            }
+    toggleFullScreen: function() {
+      if (!document.fullscreenElement &&
+        !document.mozFullScreenElement && !document.webkitFullscreenElement) {
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen();
+          document.getElementById("toggleFullScreen").innerText = "退出全屏";
+        } else if (document.documentElement.mozRequestFullScreen) {
+          document.documentElement.mozRequestFullScreen();
+          document.getElementById("toggleFullScreen").innerText = "退出全屏";
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+          document.getElementById("toggleFullScreen").innerText = "退出全屏";
         }
+      } else {
+        if (document.cancelFullScreen) {
+          document.cancelFullScreen();
+          document.getElementById("toggleFullScreen").innerText = "全屏显示";
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+          document.getElementById("toggleFullScreen").innerText = "全屏显示";
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen();
+          document.getElementById("toggleFullScreen").innerText = "全屏显示";
+        }
+      }
     },
     // 监听Esc按键退出全屏事件
     // window.onresize = function () {
@@ -2107,24 +2128,24 @@
      *
      * @desc 获取滚动条距顶部的距离
      */
-    getScrollTop: function () {
-        return (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+    getScrollTop: function() {
+      return (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
     },
     /**
      *
      * @desc 设置滚动条距顶部的距离
      */
-    setScrollTop: function (value) {
-        window.scrollTo(0, value);
-        return value;
+    setScrollTop: function(value) {
+      window.scrollTo(0, value);
+      return value;
     },
     /**
      *
      * @desc 判断浏览器是否支持webP格式图片
      * @return {Boolean}
      */
-    isSupportWebP: function () {
-        return !![].map && document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') == 0;
+    isSupportWebP: function() {
+      return !![].map && document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') == 0;
     },
     /**
      *
@@ -2132,21 +2153,78 @@
      * @param {HTMLElement} ele
      * @returns { {left: number, top: number} }
      */
-    offset: function (ele) {
-        var pos = {
-            left: 0,
-            top: 0
-        };
-        while (ele) {
-            pos.left += ele.offsetLeft;
-            pos.top += ele.offsetTop;
-            ele = ele.offsetParent;
-        };
-        return pos;
+    offset: function(ele) {
+      var pos = {
+        left: 0,
+        top: 0
+      };
+      while (ele) {
+        pos.left += ele.offsetLeft;
+        pos.top += ele.offsetTop;
+        ele = ele.offsetParent;
+      };
+      return pos;
     }
   };
   // 日期工具
   csdutils.dateUtils = {
+    // new Date对象可接受的参数
+    // 1、new Date("month dd,yyyy hh:mm:ss");
+    // 2、new Date("month dd,yyyy");
+    // 3、new Date(yyyy,mth,dd,hh,mm,ss); 注意：这种方式下，必须传递整型；
+    // 4、new Date(yyyy,mth,dd);
+    // 5、new Date(ms); 注意：ms:是需要创建的时间和
+    // 6.new Date(yyyy-MM-dd hh:mm:ss)
+    // GMT时间1970年1月1日之间相差的毫秒数；当前时间与GMT1970.1.1之间的毫秒数：var mills = new Date().getTime();
+    // 注意:mth:用整数表示月份，从0（1月）到11（12月）
+
+    // new Date转化为yyyy-MM-dd HH:mm:ss
+    dateToFormat: function(date) {
+      return date.toLocaleString("en-US", {
+        hour12: false
+      }).replace(/\b\d\b/g, '0$&').replace(new RegExp('/', 'gm'), '-')
+    },
+    // 将yyyy-MM-dd转化为new Date()
+    forMatToDate: function(date) {
+      // return new Date('2018-04-16 19:43:00');
+      return new Date(date);
+    },
+    // 获取当前的时间yyyy-MM-dd HH:mm:ss
+    obtainDate: function() {
+      let date = new Date();
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
+      let hours = date.getHours();
+      let minu = date.getMinutes();
+      let second = date.getSeconds();
+      //判断是否满10
+      let arr = [month, day, hours, minu, second];
+      arr.forEach(item => {
+        item < 10 ? "0" + item : item;
+      })
+      return year + '-' + arr[0] + '-' + arr[1] + ' ' + arr[2] + ':' + arr[3] + ':' + arr[4]
+    },
+    // 将时间戳转化为yyyy-MM-dd HH:mm:ss
+    returnTimestamp: function(strTime) {
+      let middleDate = new Date(strTime)
+      return middleDate.toLocaleString('zh-CN', {
+        hour12: false
+      }).replace(/\b\d\b/g, '0$&').replace(new RegExp('/', 'gm'), '-')
+    },
+    // 比较yyyy-MM-dd时间大小
+    compareTwo: function(dateOne, dateTwo) {
+      return Number(dateOne.replace(/\-/g, "")) < Number(dateTwo.replace(/\-/g, ""))
+    },
+    // 计算两个日期格式为(yyyy-MM-dd)相差几个月
+    disparityFewMonth: function(dateOne, dateTwo) {
+      let datesOne = dateOne.split('-').map(item => Number(item));
+      let datesTwo = dateTwo.split('-').map(item => Number(item));
+      const diff = [0, 0, 0].map((value, index) => {
+        return datesOne[index] - datesTwo[index]
+      });
+      return (diff[0] * 12 + diff[1]) + '月' + diff[2] + '天'
+    },
     //是否闰年
     isLeapYear: function(year) {
       return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0);
@@ -2776,11 +2854,11 @@
      * @param  {[type]} path
      * @param  {[type]} domain
      */
-    delCookie: function (name, path, domain) {
-        var value = this.getCookie(name);
-        if (value != null) {
-            document.cookie = name + '=; expires=Mon, 2 Mar 2010 19:00:00 UTC; path=' + (path || '/') + '; domain=' + (domain || '') + ';';
-        }
+    delCookie: function(name, path, domain) {
+      var value = this.getCookie(name);
+      if (value != null) {
+        document.cookie = name + '=; expires=Mon, 2 Mar 2010 19:00:00 UTC; path=' + (path || '/') + '; domain=' + (domain || '') + ';';
+      }
     },
     // 检查是否含有某cookie
     hasCookie: function(name) {
@@ -3135,11 +3213,11 @@
      * @param URL为空则取当前页面
      * @returns {*}
      */
-    getParam: function (name, url) {
-        var u = arguments[1] || window.location.search.replace("&amp;", "&"),
-            reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"),
-            result = u.substr(u.indexOf("\?") + 1).match(reg);
-        return result != null ? result[2] : "";
+    getParam: function(name, url) {
+      var u = arguments[1] || window.location.search.replace("&amp;", "&"),
+        reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"),
+        result = u.substr(u.indexOf("\?") + 1).match(reg);
+      return result != null ? result[2] : "";
     },
     /*
      * 获取URL地址里的指定参数
@@ -3218,17 +3296,17 @@
      * @return {string}
      */
     getRootPath: function() {
-        // 获取当前网址，如： http://localhost:8080/iclass/edu/teacher/task.jsp
-        var curWwwPath = window.document.location.href;
-        // 获取主机地址之后的目录，如： iclass/edu/teacher/task.jsp
-        var pathName = window.document.location.pathname;
-        var pos = curWwwPath.indexOf(pathName);
-        // 获取主机地址，如： http://localhost:8080
-        var localhostPaht = curWwwPath.substring(0, pos);
-        // 获取带"/"的项目名，如：/iclass
-        var projectName = pathName.substring(0,
-            pathName.substr(1).indexOf('/') + 1);
-        return (localhostPaht + projectName);
+      // 获取当前网址，如： http://localhost:8080/iclass/edu/teacher/task.jsp
+      var curWwwPath = window.document.location.href;
+      // 获取主机地址之后的目录，如： iclass/edu/teacher/task.jsp
+      var pathName = window.document.location.pathname;
+      var pos = curWwwPath.indexOf(pathName);
+      // 获取主机地址，如： http://localhost:8080
+      var localhostPaht = curWwwPath.substring(0, pos);
+      // 获取带"/"的项目名，如：/iclass
+      var projectName = pathName.substring(0,
+        pathName.substr(1).indexOf('/') + 1);
+      return (localhostPaht + projectName);
     },
     // /**
     //  *
@@ -3716,28 +3794,28 @@
      * @method Util.downloadAttachFile
      * @param  {string} [url] 附件的下载URL，不传时使用默认值
      */
-    downLoadAttachFileByUrl: function(url){
-        var url = url ? url : '/download';
-        var elemIF = document.createElement("iframe");
-        elemIF.src = url;
-        elemIF.style.display = "none";
-        document.body.appendChild(elemIF);
+    downLoadAttachFileByUrl: function(url) {
+      var url = url ? url : '/download';
+      var elemIF = document.createElement("iframe");
+      elemIF.src = url;
+      elemIF.style.display = "none";
+      document.body.appendChild(elemIF);
     },
     /**
-    * 比较两个浮点数（支持字符串数字），如果前者大于后者，则返回true，否则false
-    * @method Util.biggerThan
-    * @param {float} doubleNum1
-    * @param {float} doubleNum2
-    * @param {string} opt_precision 精确度，默认2
-    * @returns {boolean} true or false
-    */
+     * 比较两个浮点数（支持字符串数字），如果前者大于后者，则返回true，否则false
+     * @method Util.biggerThan
+     * @param {float} doubleNum1
+     * @param {float} doubleNum2
+     * @param {string} opt_precision 精确度，默认2
+     * @returns {boolean} true or false
+     */
     biggerThan: function(doubleNum1, doubleNum2, opt_precision) {
-       opt_precision = opt_precision || 2;
-       if(opt_precision == doubleNum1.toString().split(".")[1].length){
-           return parseInt(parseFloat(doubleNum1) * Math.pow(10, opt_precision)) > parseInt(parseFloat(doubleNum2) * Math.pow(10, opt_precision));
-       }else{
-           return Math.round(parseFloat(doubleNum1) * Math.pow(10, opt_precision)) > parseInt(parseFloat(doubleNum2) * Math.pow(10, opt_precision));
-       }
+      opt_precision = opt_precision || 2;
+      if (opt_precision == doubleNum1.toString().split(".")[1].length) {
+        return parseInt(parseFloat(doubleNum1) * Math.pow(10, opt_precision)) > parseInt(parseFloat(doubleNum2) * Math.pow(10, opt_precision));
+      } else {
+        return Math.round(parseFloat(doubleNum1) * Math.pow(10, opt_precision)) > parseInt(parseFloat(doubleNum2) * Math.pow(10, opt_precision));
+      }
     },
     /**
      * 格式化文件大小
@@ -3745,35 +3823,35 @@
      * @return {[type]}      [description]
      */
     formatFileSize: function(size) {
-        var string;
-        if (size >= 1024 * 1024 * 1024 * 1024 / 10) {
-            size = size / (1024 * 1024 * 1024 * 1024 / 10);
-            string = "TB";
-        } else if (size >= 1024 * 1024 * 1024 / 10) {
-            size = size / (1024 * 1024 * 1024 / 10);
-            string = "GB";
-        } else if (size >= 1024 * 1024 / 10) {
-            size = size / (1024 * 1024 / 10);
-            string = "MB";
-        } else if (size >= 1024 / 10) {
-            size = size / (1024 / 10);
-            string = "KB";
-        } else {
-            size = size * 10;
-            string = "b";
-        }
-        return (Math.round(size) / 10) + string;
+      var string;
+      if (size >= 1024 * 1024 * 1024 * 1024 / 10) {
+        size = size / (1024 * 1024 * 1024 * 1024 / 10);
+        string = "TB";
+      } else if (size >= 1024 * 1024 * 1024 / 10) {
+        size = size / (1024 * 1024 * 1024 / 10);
+        string = "GB";
+      } else if (size >= 1024 * 1024 / 10) {
+        size = size / (1024 * 1024 / 10);
+        string = "MB";
+      } else if (size >= 1024 / 10) {
+        size = size / (1024 / 10);
+        string = "KB";
+      } else {
+        size = size * 10;
+        string = "b";
+      }
+      return (Math.round(size) / 10) + string;
     },
     /**
      * 获取微信版本
      */
-    getWxVersion: function () {
-        var ua = navigator.userAgent;
-        if (/MicroMessenger/.test(ua)) {
-            return parseInt(ua.match(/MicroMessenger\/(.*)/i)[1], 10);
-        } else {
-            return 5;
-        }
+    getWxVersion: function() {
+      var ua = navigator.userAgent;
+      if (/MicroMessenger/.test(ua)) {
+        return parseInt(ua.match(/MicroMessenger\/(.*)/i)[1], 10);
+      } else {
+        return 5;
+      }
     },
     /**
      * 浮点数相加
@@ -3781,16 +3859,20 @@
      * @param arg2
      * @returns {number}
      */
-    accAdd: function(arg1,arg2){
-        var r1,r2,m;
-        try{
-            r1 = arg1.toString().split(".")[1].length
-        }catch(e){r1=0}
-        try{
-            r2 = arg2.toString().split(".")[1].length
-        }catch(e){r2=0}
-        m = Math.pow(10,Math.max(r1,r2));
-        return (arg1 * m + arg2 * m) / m;
+    accAdd: function(arg1, arg2) {
+      var r1, r2, m;
+      try {
+        r1 = arg1.toString().split(".")[1].length
+      } catch (e) {
+        r1 = 0
+      }
+      try {
+        r2 = arg2.toString().split(".")[1].length
+      } catch (e) {
+        r2 = 0
+      }
+      m = Math.pow(10, Math.max(r1, r2));
+      return (arg1 * m + arg2 * m) / m;
     },
     /**
      * 浮点数减法
@@ -3798,21 +3880,21 @@
      * @param arg2
      * @returns {string}
      */
-    accSub: function(arg1,arg2){
-        var r1,r2,m,n;
-        try{
-            r1=arg1.toString().split(".")[1].length
-        }catch(e){
-            r1=0
-        }
-        try{
-            r2=arg2.toString().split(".")[1].length
-        }catch(e){
-            r2=0
-        }
-        m = Math.pow(10,Math.max(r1,r2));
-        n=(r1>=r2)?r1:r2;
-        return ((arg2*m-arg1*m)/m).toFixed(n);
+    accSub: function(arg1, arg2) {
+      var r1, r2, m, n;
+      try {
+        r1 = arg1.toString().split(".")[1].length
+      } catch (e) {
+        r1 = 0
+      }
+      try {
+        r2 = arg2.toString().split(".")[1].length
+      } catch (e) {
+        r2 = 0
+      }
+      m = Math.pow(10, Math.max(r1, r2));
+      n = (r1 >= r2) ? r1 : r2;
+      return ((arg2 * m - arg1 * m) / m).toFixed(n);
     },
     /**
      * 浮点数乘法
@@ -3820,17 +3902,17 @@
      * @param arg2, Number or String
      * @returns {number}
      */
-    accMul: function(arg1,arg2){
-        var m=0,
-            s1=arg1.toString(),
-            s2=arg2.toString();
-            try{
-                m+=s1.split(".")[1].length
-            }catch(e){}
-            try{
-                m+=s2.split(".")[1].length
-            }catch(e){}
-        return Number(s1.replace(".","")) * Number(s2.replace(".","")) / Math.pow(10,m);
+    accMul: function(arg1, arg2) {
+      var m = 0,
+        s1 = arg1.toString(),
+        s2 = arg2.toString();
+      try {
+        m += s1.split(".")[1].length
+      } catch (e) {}
+      try {
+        m += s2.split(".")[1].length
+      } catch (e) {}
+      return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
     },
     /**
      * 浮点数除法
@@ -3838,19 +3920,21 @@
      * @param arg2
      * @returns {number}
      */
-    accDiv: function(arg1,arg2){
-        var t1=0,t2=0,r1,r2;
-        try{
-            t1=arg1.toString().split(".")[1].length
-        }catch(e){}
-        try{
-            t2=arg2.toString().split(".")[1].length
-        }catch(e){}
-        with(Math){
-            r1=Number(arg1.toString().replace(".",""));
-            r2=Number(arg2.toString().replace(".",""));
-            return (r1/r2)*pow(10,t2-t1);
-        }
+    accDiv: function(arg1, arg2) {
+      var t1 = 0,
+        t2 = 0,
+        r1, r2;
+      try {
+        t1 = arg1.toString().split(".")[1].length
+      } catch (e) {}
+      try {
+        t2 = arg2.toString().split(".")[1].length
+      } catch (e) {}
+      with(Math) {
+        r1 = Number(arg1.toString().replace(".", ""));
+        r2 = Number(arg2.toString().replace(".", ""));
+        return (r1 / r2) * pow(10, t2 - t1);
+      }
     },
     // 判断网页元素是否具有某种属性和样式 matchesSelector
     // Usage
@@ -3881,66 +3965,66 @@
       }
     },
     // 页面加载完成后
-		readyEvent : function(fn) {
-			if (fn==null) {
-				fn=document;
-			}
-			var oldonload = window.onload;
-			if (typeof window.onload != 'function') {
-				window.onload = fn;
-			} else {
-				window.onload = function() {
-					oldonload();
-					fn();
-				};
-			}
-		},
+    readyEvent: function(fn) {
+      if (fn == null) {
+        fn = document;
+      }
+      var oldonload = window.onload;
+      if (typeof window.onload != 'function') {
+        window.onload = fn;
+      } else {
+        window.onload = function() {
+          oldonload();
+          fn();
+        };
+      }
+    },
     // 视能力分别使用dom0||dom2||IE方式 来绑定事件
-		// 参数： 操作的元素,事件名称 ,事件处理程序
-		addEvent : function(element, type, handler) {
-			if (element.addEventListener) {
-				element.addEventListener(type, handler, false);
-			} else if (element.attachEvent) {
-				element.attachEvent('on' + type, function() {
-					handler.call(element);
-				});
-			} else {
-				element['on' + type] = handler;
-			}
-		},
+    // 参数： 操作的元素,事件名称 ,事件处理程序
+    addEvent: function(element, type, handler) {
+      if (element.addEventListener) {
+        element.addEventListener(type, handler, false);
+      } else if (element.attachEvent) {
+        element.attachEvent('on' + type, function() {
+          handler.call(element);
+        });
+      } else {
+        element['on' + type] = handler;
+      }
+    },
     // 移除事件
-		removeEvent : function(element, type, handler) {
-			if (element.removeEventListener) {
-				element.removeEventListener(type, handler, false);
-			} else if (element.datachEvent) {
-				element.detachEvent('on' + type, handler);
-			} else {
-				element['on' + type] = null;
-			}
-		},
+    removeEvent: function(element, type, handler) {
+      if (element.removeEventListener) {
+        element.removeEventListener(type, handler, false);
+      } else if (element.datachEvent) {
+        element.detachEvent('on' + type, handler);
+      } else {
+        element['on' + type] = null;
+      }
+    },
     // 阻止事件流
-		stopEvent : function(ev) {
-			this.stopPropagation(ev);
-			this.preventDefault(ev);
-		},
+    stopEvent: function(ev) {
+      this.stopPropagation(ev);
+      this.preventDefault(ev);
+    },
     getEvent: function(event) {
       return event ? event : window.event;
     },
     // 获取event对象的引用，取到事件的所有信息，确保随时能使用event；
-		// getEvent : function(e) {
-		// 	var ev = e || window.event;
-		// 	if (!ev) {
-		// 		var c = this.getEvent.caller;
-		// 		while (c) {
-		// 			ev = c.arguments[0];
-		// 			if (ev && Event == ev.constructor) {
-		// 				break;
-		// 			}
-		// 			c = c.caller;
-		// 		}
-		// 	}
-		// 	return ev;
-		// },
+    // getEvent : function(e) {
+    // 	var ev = e || window.event;
+    // 	if (!ev) {
+    // 		var c = this.getEvent.caller;
+    // 		while (c) {
+    // 			ev = c.arguments[0];
+    // 			if (ev && Event == ev.constructor) {
+    // 				break;
+    // 			}
+    // 			c = c.caller;
+    // 		}
+    // 	}
+    // 	return ev;
+    // },
     // 获取事件目标
     getTarget: function(event) {
       return event.target || event.srcElement;
