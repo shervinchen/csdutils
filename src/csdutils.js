@@ -996,6 +996,39 @@
         re = re.replace("一", "");
       return re;
     },
+    /**
+  	 * 数字-四舍五入
+  	 * @param1 {Number} 需要四舍五入的数字
+  	 * @param2 {Number} 保留的位数 默认:0
+  	 * @return {Number}
+  	 */
+    mathRound: function (param1, param2) {
+        param2 = param2 || 0;
+        var vv = Math.pow(10, param2);
+        return Math.round(param1 * vv) / vv;
+    },
+    /**
+     * 数字-精确相乘
+     * @param1 {Number}
+     * @param2 {Number}
+     * @return {Number}
+     */
+    mathAccMul: function (param1, param2) {
+        var m = 0,
+            s1 = param1.toString(),
+            s2 = param2.toString();
+        try {
+            m += s1.split(".")[1].length;
+        } catch (e) { }
+        try {
+            m += s2.split(".")[1].length;
+        } catch (e) { }
+        return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+    },
+    // 返回带逗号的数字
+    numberWithCommas: function(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');
+    },
     /*将数字转换为大写金额*/
     changeToChinese: function(Num) {
       //判断如果传递进来的不是字符的话转换为字符
@@ -2173,6 +2206,78 @@
       return !![].map && document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') == 0;
     },
     /**
+     * @description iframe高度自适应
+     * @param {String} id iframe的id
+     * @param {Number} endTime 计算的时间
+     */
+    adjustIframe: function(id, endTime) {
+        var iframe = this.byId(id),
+            time = 0,
+            end = endTime || 30,
+            intervalID;
+        if (iframe) {
+            function callback() {
+                time = time + 1;
+                if (time == end) {
+                    clearInterval(intervalID)
+                }
+                var idoc = iframe.contentWindow && iframe.contentWindow.document || iframe.contentDocument;
+                var iheight = Math.max(idoc.body.scrollHeight, idoc.documentElement.scrollHeight);
+                iframe.style.height = iheight + "px";
+            }
+            intervalID = setInterval(callback, 50)
+        }
+    },
+    /**
+     * @description 拖拽元素
+     * @param {HTMLElement} elem 拖拽的元素
+     * @param {Function} callback 拖拽结束之后的回调函数
+     */
+    drag: function(elem, callback) {
+        callback = callback || function() {};
+        var $D = this;
+        var params = {
+            left: 0,
+            top: 0,
+            currentX: 0,
+            currentY: 0,
+            flag: false
+        };
+        if ($D.getStyle(elem, "left") !== "auto") {
+            params.left = $D.getStyle(elem, "left");
+        }
+        if ($D.getStyle(elem, "top") !== "auto") {
+            params.top = $D.getStyle(elem, "top");
+        }
+        elem.onmousedown = function(event) {
+            params.flag = true;
+            event = event || window.event;
+            params.currentX = event.clientX;
+            params.currentY = event.clientY;
+        };
+        document.onmousemove = function(event) {
+            event = event || window.event;
+            if (params.flag) {
+                var nowX = event.clientX,
+                    nowY = event.clientY;
+                var disX = nowX - params.currentX,
+                    disY = nowY - params.currentY;
+                elem.style.left = parseInt(params.left) + disX + "px";
+                elem.style.top = parseInt(params.top) + disY + "px";
+            }
+        };
+        document.onmouseup = function() {
+            params.flag = false;
+            if ($D.getStyle(elem, "left") !== "auto") {
+                params.left = $D.getStyle(elem, "left");
+            }
+            if ($D.getStyle(elem, "top") !== "auto") {
+                params.top = $D.getStyle(elem, "top");
+            }
+            callback(elem);
+        };
+    },
+    /**
      *
      * @desc  获取一个元素的距离文档(document)的位置，类似jQ中的offset()
      * @param {HTMLElement} ele
@@ -2250,9 +2355,66 @@
       });
       return (diff[0] * 12 + diff[1]) + '月' + diff[2] + '天'
     },
+    /**
+     * @description 求当前日期与传入的日期相隔多少天
+     * @param {Date} date 当前日期
+     * @return {Number}
+     */
+    getDateInterval: function(date) {
+        var d = new Date(date);
+        if (d == "Invalid Date") {
+            throw "Invalid Date";
+        }else {
+            // Math.abs 绝对值
+            return Math.abs(this*1-d*1)/60/60/1000/24;
+        }
+    },
+    /**
+     * @description 求当前日期所在月的第一天
+     * @param {Date} date 当前日期
+     * @return {Date}
+     */
+    getFirstDateInMonth: function(date) {
+        return new Date(date.getFullYear(), date.getMonth(), 1);
+    },
+    /**
+     * @description 求当前日期所在月的最后一天
+     * @param {Date} date 当前日期
+     * @return {Date}
+     */
+    getLastDateInMonth: function(date) {
+        return new Date(date.getFullYear(), date.getMonth()+1, 0);
+    },
+    /**
+     * @description 求当前日期所在季度的第一天
+     * @param {Date} date 当前日期
+     * @return {Date}
+     */
+    getFirstDateInQuarter: function(date) {
+        return new Date(date.getFullYear(), Math.floor(date.getMonth()/3)*3, 1);
+    },
+    /**
+     * @description 判断是否为闰年
+     * @param {Date} date 当前日期
+     * @return {Date}
+     */
+    isLeapYear1: function(date) {
+        return new Date(date.getFullYear(), 2, 0).getDate() == 29;
+    },
     //是否闰年
-    isLeapYear: function(year) {
+    isLeapYear2: function(year) {
       return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0);
+    },
+    /**
+     * @description 求某年某月的天数
+     * @param {Number} year 年
+     * @param {Number} month 月
+     * @return {Number}
+     */
+    daysInMonth: function(year, month) {
+        var d = new Date();
+        d.setFullYear(year, (month == 12) ? 1 : month, 0);
+        return d.getDate();
     },
     /**
      * @desc   格式化${startTime}距现在的已过时间
@@ -3960,6 +4122,16 @@
         r2 = Number(arg2.toString().replace(".", ""));
         return (r1 / r2) * Math.pow(10, t2 - t1);
       // }
+    },
+    /**
+     * @description 产生唯一ID
+     * @return {String}
+     */
+    buildGuid: function() {
+        function guid() {
+            return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        }
+        return (guid()+guid()+"-"+guid()+"-"+guid()+"-"+guid()+"-"+guid()+guid()+guid());
     },
     // 判断网页元素是否具有某种属性和样式 matchesSelector
     // Usage
