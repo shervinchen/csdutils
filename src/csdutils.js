@@ -997,15 +997,15 @@
       return re;
     },
     /**
-  	 * 数字-四舍五入
-  	 * @param1 {Number} 需要四舍五入的数字
-  	 * @param2 {Number} 保留的位数 默认:0
-  	 * @return {Number}
-  	 */
-    mathRound: function (param1, param2) {
-        param2 = param2 || 0;
-        var vv = Math.pow(10, param2);
-        return Math.round(param1 * vv) / vv;
+     * 数字-四舍五入
+     * @param1 {Number} 需要四舍五入的数字
+     * @param2 {Number} 保留的位数 默认:0
+     * @return {Number}
+     */
+    mathRound: function(param1, param2) {
+      param2 = param2 || 0;
+      var vv = Math.pow(10, param2);
+      return Math.round(param1 * vv) / vv;
     },
     /**
      * 数字-精确相乘
@@ -1013,21 +1013,21 @@
      * @param2 {Number}
      * @return {Number}
      */
-    mathAccMul: function (param1, param2) {
-        var m = 0,
-            s1 = param1.toString(),
-            s2 = param2.toString();
-        try {
-            m += s1.split(".")[1].length;
-        } catch (e) { }
-        try {
-            m += s2.split(".")[1].length;
-        } catch (e) { }
-        return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+    mathAccMul: function(param1, param2) {
+      var m = 0,
+        s1 = param1.toString(),
+        s2 = param2.toString();
+      try {
+        m += s1.split(".")[1].length;
+      } catch (e) {}
+      try {
+        m += s2.split(".")[1].length;
+      } catch (e) {}
+      return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
     },
     // 返回带逗号的数字
     numberWithCommas: function(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
     /*将数字转换为大写金额*/
     changeToChinese: function(Num) {
@@ -1185,28 +1185,28 @@
   csdutils.arrayUtils = {
     //从一个给定的数组arr中,随机返回num个不重复项
     getArrayItems: function(arr, num) {
-        //新建一个数组,将传入的数组复制过来,用于运算,而不要直接操作传入的数组;
-        var temp_array = new Array();
-        for (var index in arr) {
-            temp_array.push(arr[index]);
+      //新建一个数组,将传入的数组复制过来,用于运算,而不要直接操作传入的数组;
+      var temp_array = new Array();
+      for (var index in arr) {
+        temp_array.push(arr[index]);
+      }
+      //取出的数值项,保存在此数组
+      var return_array = new Array();
+      for (var i = 0; i < num; i++) {
+        //判断如果数组还有可以取出的元素,以防下标越界
+        if (temp_array.length > 0) {
+          //在数组中产生一个随机索引
+          var arrIndex = Math.floor(Math.random() * temp_array.length);
+          //将此随机索引的对应的数组元素值复制出来
+          return_array[i] = temp_array[arrIndex];
+          //然后删掉此索引的数组元素,这时候temp_array变为新的数组
+          temp_array.splice(arrIndex, 1);
+        } else {
+          //数组中数据项取完后,退出循环,比如数组本来只有10项,但要求取出20项.
+          break;
         }
-        //取出的数值项,保存在此数组
-        var return_array = new Array();
-        for (var i = 0; i<num; i++) {
-            //判断如果数组还有可以取出的元素,以防下标越界
-            if (temp_array.length>0) {
-                //在数组中产生一个随机索引
-                var arrIndex = Math.floor(Math.random()*temp_array.length);
-                //将此随机索引的对应的数组元素值复制出来
-                return_array[i] = temp_array[arrIndex];
-                //然后删掉此索引的数组元素,这时候temp_array变为新的数组
-                temp_array.splice(arrIndex, 1);
-            } else {
-                //数组中数据项取完后,退出循环,比如数组本来只有10项,但要求取出20项.
-                break;
-            }
-        }
-        return return_array;
+      }
+      return return_array;
     },
     // 检测是否是数组
     judgeArr: function(arr) {
@@ -1504,12 +1504,12 @@
     },
     // 数组对象排序
     orderArr2: function(arr) {
-        arr.sort((a,b)=>{
-            let value1 = a[property];
-            let value2 = b[property];
-            return value1 - value2;//sort方法接收一个函数作为参数，这里嵌套一层函数用
-            //来接收对象属性名，其他部分代码与正常使用sort方法相同
-        })
+      arr.sort((a, b) => {
+        let value1 = a[property];
+        let value2 = b[property];
+        return value1 - value2; //sort方法接收一个函数作为参数，这里嵌套一层函数用
+        //来接收对象属性名，其他部分代码与正常使用sort方法相同
+      })
     },
     //返回数组（字符串）出现最多的几次元素和出现次数
     //arr, rank->长度，默认为数组长度，ranktype，排序方式，默认降序
@@ -1759,6 +1759,26 @@
 
       throw new Error("Unable to copy values! Its type isn't supported.");
     },
+    /**
+     * Extends a given Object properties and its childs.
+     */
+    deepExtend: function(out) {
+      out = out || {};
+      for (var i = 1; i < arguments.length; i++) {
+        var obj = arguments[i];
+        if (!obj)
+          continue;
+        for (var key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            if (typeof obj[key] === 'object' && obj[key] != null)
+              out[key] = deepExtend(out[key], obj[key]);
+            else
+              out[key] = obj[key];
+          }
+        }
+      }
+      return out;
+    },
     // deepCopy: function(obj) {
     //   var copy = obj;
     //   // 对于Date,String,Boolean等引用类型的数据，需要考虑调用构造函数重新构造，直接赋值依然会有引用问题（不是真正的clone引用变量）
@@ -1797,6 +1817,48 @@
   };
   // DOM工具
   csdutils.domUtils = {
+    //->listToArray:把类数组集合转换为数组
+    listToArray: function(likeAry) {
+      if (flag) {
+        return Array.prototype.slice.call(likeAry, 0);
+      }
+      var ary = [];
+      for (var i = 0; i < likeAry.length; i++) {
+        ary[ary.length] = likeAry[i];
+      }
+      return ary;
+    },
+    //->formatJSON:把JSON格式字符串转换为JSON格式对象
+    formatJSON: function(jsonStr) {
+      return "JSON" in window ? JSON.parse(jsonStr) : eval("(" + jsonStr + ")");
+    },
+    //->offset:获取页面中任意元素距离BODY的偏移
+    offset: function(curEle) {
+      var disLeft = curEle.offsetLeft,
+        disTop = curEle.offsetTop,
+        par = curEle.offsetParent;
+      while (par) {
+        if (navigator.userAgent.indexOf("MSIE 8") === -1) {
+          disLeft += par.clientLeft;
+          disTop += par.clientTop;
+        }
+        disLeft += par.offsetLeft;
+        disTop += par.offsetTop;
+        par = par.offsetParent;
+      }
+      return {
+        left: disLeft,
+        top: disTop
+      };
+    },
+    //->win:操作浏览器的盒子模型信息
+    win: function(attr, value) {
+      if (typeof value === "undefined") {
+        return document.documentElement[attr] || document.body[attr];
+      }
+      document.documentElement[attr] = value;
+      document.body[attr] = value;
+    },
     /**
      *
      * @desc 获取滚动条距顶部的距离
@@ -1912,6 +1974,22 @@
         return false;
       }
     },
+    hasClass3: function(curEle, className) {
+      var reg = new RegExp("(^| +)" + className + "( +|$)");
+      return reg.test(curEle.className);
+    },
+    // /**
+    // * Checks if the passed element contains the passed class.
+    // */
+    // function hasClass(el, className){
+    //     if(el == null){
+    //         return false;
+    //     }
+    //     if (el.classList){
+    //         return el.classList.contains(className);
+    //     }
+    //     return new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
+    // }
     // /**
     //  *
     //  * @desc 判断元素是否有某个class
@@ -1940,6 +2018,32 @@
         }
       }
     },
+    // function addClass(curEle, className) {
+    //     var ary = className.replace(/(^ +| +$)/g, "").split(/ +/g);
+    //     for (var i = 0, len = ary.length; i < len; i++) {
+    //         var curName = ary[i];
+    //         if (!this.hasClass(curEle, curName)) {
+    //             curEle.className += " " + curName;
+    //         }
+    //     }
+    // }
+    // /**
+    // * Adds the passed class to the passed element/s
+    // */
+    // function addClass(el, className) {
+    //     el = getList(el);
+    //
+    //     for(var i = 0; i<el.length; i++){
+    //         var item = el[i];
+    //         if (item.classList){
+    //             item.classList.add(className);
+    //         }
+    //         else{
+    //           item.className += ' ' + className;
+    //         }
+    //     }
+    //     return el;
+    // }
     /**
      *
      * @desc 为元素移除class
@@ -1968,10 +2072,130 @@
         }
       }
     },
+    // function removeClass(curEle, className) {
+    //     var ary = className.replace(/(^ +| +$)/g, "").split(/ +/g);
+    //     for (var i = 0, len = ary.length; i < len; i++) {
+    //         var curName = ary[i];
+    //         if (this.hasClass(curEle, curName)) {
+    //             var reg = new RegExp("(^| +)" + curName + "( +|$)", "g");
+    //             curEle.className = curEle.className.replace(reg, " ");
+    //         }
+    //     }
+    // }
+    // /**
+    // * Removes the passed class to the passed element/s
+    // * @param {String} `className` can be multiple classnames separated by whitespace
+    // */
+    // function removeClass(el, className){
+    //     el = getList(el);
+    //
+    //     var classNames = className.split(' ');
+    //
+    //     for(var a = 0; a<classNames.length; a++){
+    //         className = classNames[a];
+    //         for(var i = 0; i<el.length; i++){
+    //             var item = el[i];
+    //             if (item.classList){
+    //                 item.classList.remove(className);
+    //             }
+    //             else{
+    //                 item.className = item.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+    //             }
+    //         }
+    //     }
+    //     return el;
+    // }
     //替换类名("被替换的类名","替换的类名")
     replaceClass: function(obj, newName, oldName) {
       this.removeClass(obj, oldName);
       this.addClass(obj, newName);
+    },
+    // 通过元素的样式类名获取一组元素集合
+    getElementsByClass: function(strClass, context) {
+      context = context || document;
+      if ("getComputedStyle" in window) {
+        return this.listToArray(context.getElementsByClassName(strClass));
+      }
+      //->IE6~8
+      var ary = [],
+        strClassAry = strClass.replace(/(^ +| +$)/g, "").split(/ +/g);
+      var nodeList = context.getElementsByTagName("*");
+      for (var i = 0, len = nodeList.length; i < len; i++) {
+        var curNode = nodeList[i];
+        var isOk = true;
+        for (var k = 0; k < strClassAry.length; k++) {
+          var reg = new RegExp("(^| +)" + strClassAry[k] + "( +|$)");
+          if (!reg.test(curNode.className)) {
+            isOk = false;
+            break;
+          }
+        }
+        if (isOk) {
+          ary[ary.length] = curNode;
+        }
+      }
+      return ary;
+    },
+    // 获取元素的样式值
+    getCss: function(attr) {
+      var val = null,
+        reg = null;
+      if ("getComputedStyle" in window) {
+        val = window.getComputedStyle(this, null)[attr];
+      } else {
+        if (attr === "opacity") {
+          val = this.currentStyle["filter"];
+          reg = /^alpha\(opacity=(\d+(?:\.\d+)?)\)$/;
+          val = reg.test(val) ? reg.exec(val)[1] / 100 : 1;
+        } else {
+          val = this.currentStyle[attr];
+        }
+      }
+      reg = /^(-?\d+(\.\d+)?)(px|pt|em|rem)?$/;
+      return reg.test(val) ? parseFloat(val) : val;
+    },
+    // 给当前元素的某一个样式属性设置值
+    setCss: function(attr, value) {
+      if (attr === "float") {
+        this["style"]["cssFloat"] = value;
+        this["style"]["styleFloat"] = value;
+        return;
+      }
+      if (attr === "opacity") {
+        this["style"]["opacity"] = value;
+        this["style"]["filter"] = "alpha(opacity=" + value * 100 + ")";
+        return;
+      }
+      var reg = /^(width|height|top|bottom|left|right|((margin|padding)(Top|Bottom|Left|Right)?))$/;
+      if (reg.test(attr)) {
+        if (!isNaN(value)) {
+          value += "px";
+        }
+      }
+      this["style"][attr] = value;
+    },
+    // 给当前元素批量的设置样式属性值
+    setGroupCss: function(options) {
+      for (var key in options) {
+        if (options.hasOwnProperty(key)) {
+          setCss.call(this, key, options[key]);
+        }
+      }
+    },
+    // 实现了获取、单独设置、批量设置元素的样式值
+    css: function(curEle) {
+      var argTwo = arguments[1],
+        ary = Array.prototype.slice.call(arguments, 1);
+      if (typeof argTwo === "string") {
+        if (typeof arguments[2] === 'undefined') {
+          return getCss.apply(curEle, ary);
+        }
+        setCss.apply(curEle, ary);
+      }
+      argTwo = argTwo || 0;
+      if (argTwo.toString() === "[object Object]") {
+        setGroupCss.apply(curEle, ary);
+      }
     },
     /*获取兄弟节点*/
     siblings1: function(ele) {
@@ -2024,6 +2248,35 @@
       }
       return a;
     },
+    children: function(curEle, tagName) {
+      var ary = [];
+      // --> IE6~8不能使用内置的children属性，我们自己写代码实现
+      if (/MSIE (6|7|8)/i.test(navigator.userAgent)) {
+        var nodeList = curEle.childNodes;
+        for (var i = 0, len = nodeList.length; i < len; i++) {
+          var curNode = nodeList[i];
+          if (curNode.nodeType === 1) {
+            ary[ary.length] = curNode;
+          }
+        }
+        nodeList = null;
+      } else {
+        // 标准浏览器中，我们直接使用children即可，但是这样获取的是一个元素集合（类数组），为了和IE6~8下保持一致，我们借用数组原型上的slice，实现把类数组转换为数组。
+        ary = Array.prototype.slice.call(curEle.children);
+      }
+      // --> 二次筛选
+      if (typeof tagName === 'string') {
+        for (var k = 0; k < ary.length; k++) { // 数组长度会减小的情况，必须要使用这样的方式判断长度，不能和上面一样
+          var curEleNode = ary[k];
+          if (curEleNode.nodeName.toLowerCase() !== tagName.toLowerCase()) {
+            // --> 不是我想要的标签
+            ary.splice(k, 1);
+            k--;
+          }
+        }
+      }
+      return ary;
+    },
     /**
      * 获取相邻的元素节点
      * @param {*} node 传入节点
@@ -2055,6 +2308,95 @@
       } else {
         parent.insertBefore(newNode, referenceNode.nextSibling);
       }
+    },
+    // 获取上一个兄弟元素节点
+    prev: function(curEle) {
+      var flag = "getComputedStyle" in window;
+      if (flag) {
+        return curEle.previousElementSibling;
+      }
+      var pre = curEle.previousSibling;
+      while (pre && pre.nodeType !== 1) {
+        pre = pre.previousSibling;
+      }
+      return pre;
+    },
+    // 获取下一个兄弟元素节点
+    next: function(curEle) {
+      var flag = "getComputedStyle" in window;
+      if (flag) {
+        return curEle.nextElementSibling;
+      }
+      var nex = curEle.nextSibling;
+      while (nex && nex.nodeType !== 1) {
+        nex = nex.nextSibling;
+      }
+      return nex;
+    },
+    // 获取前面所有的兄弟元素节点
+    prevAll: function(curEle) {
+      var ary = [];
+      var pre = this.prev(curEle);
+      while (pre) {
+        ary.unshift(pre);
+        pre = this.prev(pre);
+      }
+      return ary;
+    },
+    // 获取后面所有的兄弟元素节点
+    nextAll: function(curEle) {
+      var ary = [];
+      var nex = this.next(curEle);
+      while (nex) {
+        ary.push(nex);
+        nex = this.next(nex);
+      }
+      return ary;
+    },
+    // 获取相邻的两个元素节点
+    sibling: function(curEle) {
+      var pre = this.prev(curEle);
+      var nex = this.next(curEle);
+      var ary = [];
+      pre ? ary.push(pre) : null;
+      nex ? ary.push(nex) : null;
+      return ary;
+    },
+    // 获取当前元素的索引
+    firstChild: function(curEle) {
+      var chs = this.children(curEle);
+      return chs.length > 0 ? chs[0] : null;
+    },
+    // 获取最后一个元素子节点
+    lastChild: function(curEle) {
+      var chs = this.children(curEle);
+      return chs.length > 0 ? chs[chs.length - 1] : null;
+    },
+    // 向指定容器的末尾追加元素
+    append: function(newEle, container) {
+      container.appendChild(newEle);
+    },
+    // 向指定容器的开头追加元素
+    prepend: function(newEle, container) {
+      var fir = this.firstChild(container);
+      if (fir) {
+        container.insertBefore(newEle, fir);
+        return;
+      }
+      container.appendChild(newEle);
+    },
+    // 把新元素(newEle)追加到指定元素(oldEle)的前面（insertBefore）
+    insertBefore: function(newEle, oldEle) {
+      oldEle.parentNode.insertBefore(newEle, oldEle);
+    },
+    // 把新元素(newEle)追加到指定元素(oldEle)的后面（insertAfter）
+    insertAfter: function(newEle, oldEle) {
+      var nex = this.next(oldEle);
+      if (nex) {
+        oldEle.parentNode.insertBefore(newEle, nex);
+        return;
+      }
+      oldEle.parentNode.appendChild(newEle);
     },
     /*获取行间样式属性*/
     getByStyle: function(obj, name) {
@@ -2101,6 +2443,12 @@
   };
   // BOM工具
   csdutils.bomUtils = {
+    /**
+     * Gets the window height. Crossbrowser.
+     */
+    getWindowHeight: function() {
+      return 'innerHeight' in window ? window.innerHeight : document.documentElement.offsetHeight;
+    },
     /**
      *
      * @desc 全屏显示与取消全屏
@@ -2189,6 +2537,11 @@
     getScrollTop: function() {
       return (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
     },
+    // //http://stackoverflow.com/questions/3464876/javascript-get-window-x-y-position-for-scroll
+    // function getScrollTop(){
+    //     var doc = document.documentElement;
+    //     return (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+    // }
     /**
      *
      * @desc 设置滚动条距顶部的距离
@@ -2211,22 +2564,22 @@
      * @param {Number} endTime 计算的时间
      */
     adjustIframe: function(id, endTime) {
-        var iframe = this.byId(id),
-            time = 0,
-            end = endTime || 30,
-            intervalID;
-        if (iframe) {
-            function callback() {
-                time = time + 1;
-                if (time == end) {
-                    clearInterval(intervalID)
-                }
-                var idoc = iframe.contentWindow && iframe.contentWindow.document || iframe.contentDocument;
-                var iheight = Math.max(idoc.body.scrollHeight, idoc.documentElement.scrollHeight);
-                iframe.style.height = iheight + "px";
-            }
-            intervalID = setInterval(callback, 50)
+      var iframe = this.byId(id),
+        time = 0,
+        end = endTime || 30,
+        intervalID;
+      if (iframe) {
+        function callback() {
+          time = time + 1;
+          if (time == end) {
+            clearInterval(intervalID)
+          }
+          var idoc = iframe.contentWindow && iframe.contentWindow.document || iframe.contentDocument;
+          var iheight = Math.max(idoc.body.scrollHeight, idoc.documentElement.scrollHeight);
+          iframe.style.height = iheight + "px";
         }
+        intervalID = setInterval(callback, 50)
+      }
     },
     /**
      * @description 拖拽元素
@@ -2234,48 +2587,48 @@
      * @param {Function} callback 拖拽结束之后的回调函数
      */
     drag: function(elem, callback) {
-        callback = callback || function() {};
-        var $D = this;
-        var params = {
-            left: 0,
-            top: 0,
-            currentX: 0,
-            currentY: 0,
-            flag: false
-        };
+      callback = callback || function() {};
+      var $D = this;
+      var params = {
+        left: 0,
+        top: 0,
+        currentX: 0,
+        currentY: 0,
+        flag: false
+      };
+      if ($D.getStyle(elem, "left") !== "auto") {
+        params.left = $D.getStyle(elem, "left");
+      }
+      if ($D.getStyle(elem, "top") !== "auto") {
+        params.top = $D.getStyle(elem, "top");
+      }
+      elem.onmousedown = function(event) {
+        params.flag = true;
+        event = event || window.event;
+        params.currentX = event.clientX;
+        params.currentY = event.clientY;
+      };
+      document.onmousemove = function(event) {
+        event = event || window.event;
+        if (params.flag) {
+          var nowX = event.clientX,
+            nowY = event.clientY;
+          var disX = nowX - params.currentX,
+            disY = nowY - params.currentY;
+          elem.style.left = parseInt(params.left) + disX + "px";
+          elem.style.top = parseInt(params.top) + disY + "px";
+        }
+      };
+      document.onmouseup = function() {
+        params.flag = false;
         if ($D.getStyle(elem, "left") !== "auto") {
-            params.left = $D.getStyle(elem, "left");
+          params.left = $D.getStyle(elem, "left");
         }
         if ($D.getStyle(elem, "top") !== "auto") {
-            params.top = $D.getStyle(elem, "top");
+          params.top = $D.getStyle(elem, "top");
         }
-        elem.onmousedown = function(event) {
-            params.flag = true;
-            event = event || window.event;
-            params.currentX = event.clientX;
-            params.currentY = event.clientY;
-        };
-        document.onmousemove = function(event) {
-            event = event || window.event;
-            if (params.flag) {
-                var nowX = event.clientX,
-                    nowY = event.clientY;
-                var disX = nowX - params.currentX,
-                    disY = nowY - params.currentY;
-                elem.style.left = parseInt(params.left) + disX + "px";
-                elem.style.top = parseInt(params.top) + disY + "px";
-            }
-        };
-        document.onmouseup = function() {
-            params.flag = false;
-            if ($D.getStyle(elem, "left") !== "auto") {
-                params.left = $D.getStyle(elem, "left");
-            }
-            if ($D.getStyle(elem, "top") !== "auto") {
-                params.top = $D.getStyle(elem, "top");
-            }
-            callback(elem);
-        };
+        callback(elem);
+      };
     },
     /**
      *
@@ -2361,13 +2714,13 @@
      * @return {Number}
      */
     getDateInterval: function(date) {
-        var d = new Date(date);
-        if (d == "Invalid Date") {
-            throw "Invalid Date";
-        }else {
-            // Math.abs 绝对值
-            return Math.abs(this*1-d*1)/60/60/1000/24;
-        }
+      var d = new Date(date);
+      if (d == "Invalid Date") {
+        throw "Invalid Date";
+      } else {
+        // Math.abs 绝对值
+        return Math.abs(this * 1 - d * 1) / 60 / 60 / 1000 / 24;
+      }
     },
     /**
      * @description 求当前日期所在月的第一天
@@ -2375,7 +2728,7 @@
      * @return {Date}
      */
     getFirstDateInMonth: function(date) {
-        return new Date(date.getFullYear(), date.getMonth(), 1);
+      return new Date(date.getFullYear(), date.getMonth(), 1);
     },
     /**
      * @description 求当前日期所在月的最后一天
@@ -2383,7 +2736,7 @@
      * @return {Date}
      */
     getLastDateInMonth: function(date) {
-        return new Date(date.getFullYear(), date.getMonth()+1, 0);
+      return new Date(date.getFullYear(), date.getMonth() + 1, 0);
     },
     /**
      * @description 求当前日期所在季度的第一天
@@ -2391,7 +2744,7 @@
      * @return {Date}
      */
     getFirstDateInQuarter: function(date) {
-        return new Date(date.getFullYear(), Math.floor(date.getMonth()/3)*3, 1);
+      return new Date(date.getFullYear(), Math.floor(date.getMonth() / 3) * 3, 1);
     },
     /**
      * @description 判断是否为闰年
@@ -2399,7 +2752,7 @@
      * @return {Date}
      */
     isLeapYear1: function(date) {
-        return new Date(date.getFullYear(), 2, 0).getDate() == 29;
+      return new Date(date.getFullYear(), 2, 0).getDate() == 29;
     },
     //是否闰年
     isLeapYear2: function(year) {
@@ -2412,9 +2765,9 @@
      * @return {Number}
      */
     daysInMonth: function(year, month) {
-        var d = new Date();
-        d.setFullYear(year, (month == 12) ? 1 : month, 0);
-        return d.getDate();
+      var d = new Date();
+      d.setFullYear(year, (month == 12) ? 1 : month, 0);
+      return d.getDate();
     },
     /**
      * @desc   格式化${startTime}距现在的已过时间
@@ -4118,9 +4471,9 @@
         t2 = arg2.toString().split(".")[1].length
       } catch (e) {}
       // with(Math) {
-        r1 = Number(arg1.toString().replace(".", ""));
-        r2 = Number(arg2.toString().replace(".", ""));
-        return (r1 / r2) * Math.pow(10, t2 - t1);
+      r1 = Number(arg1.toString().replace(".", ""));
+      r2 = Number(arg2.toString().replace(".", ""));
+      return (r1 / r2) * Math.pow(10, t2 - t1);
       // }
     },
     /**
@@ -4128,10 +4481,10 @@
      * @return {String}
      */
     buildGuid: function() {
-        function guid() {
-            return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-        }
-        return (guid()+guid()+"-"+guid()+"-"+guid()+"-"+guid()+"-"+guid()+guid()+guid());
+      function guid() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+      }
+      return (guid() + guid() + "-" + guid() + "-" + guid() + "-" + guid() + "-" + guid() + guid() + guid());
     },
     // 判断网页元素是否具有某种属性和样式 matchesSelector
     // Usage
